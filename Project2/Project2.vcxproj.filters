@@ -15,44 +15,26 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>头文件</Filter>
-    </ClCompile>
-    <ClCompile Include="merge_sort.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="fileio.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="quick_sort.cpp">
+    <ClCompile Include="lcs.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="counting_sort.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="heap_sort.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="merge_sort.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="fileio.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="quick_sort.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="counting_sort.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="heap_sort.h">
+    <ClInclude Include="lcs.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="summary.txt">
+    <Text Include="..\Project2_ex1\input.txt">
       <Filter>资源文件</Filter>
     </Text>
   </ItemGroup>
