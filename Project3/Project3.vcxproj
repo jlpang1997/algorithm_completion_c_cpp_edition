@@ -18,22 +18,10 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="fileio.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="optimal_bst.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="fileio.h" />
-    <ClInclude Include="optimal_bst.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\Project3\readme.txt" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{6F1C2847-24BF-42EA-B587-82DBA8998A47}</ProjectGuid>
-    <RootNamespace>Project2ex1</RootNamespace>
+    <ProjectGuid>{BB131242-5622-48EB-8FC5-4C8E323AA80D}</ProjectGuid>
+    <RootNamespace>Project3</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -126,6 +114,21 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Project1\heap_sort.cpp" />
+    <ClCompile Include="..\Project1\quick_sort.cpp" />
+    <ClCompile Include="binary_heap.cpp" />
+    <ClCompile Include="fibo_heap.cpp" />
+    <ClCompile Include="fileio.cpp" />
+    <ClCompile Include="heap.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Project1\heap_sort.h" />
+    <ClInclude Include="..\Project1\quick_sort.h" />
+    <ClInclude Include="binary_heap.h" />
+    <ClInclude Include="fibo_heap.h" />
+    <ClInclude Include="fileio.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
