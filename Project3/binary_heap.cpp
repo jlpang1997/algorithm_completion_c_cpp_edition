@@ -1,10 +1,42 @@
 #include"binary_heap.h"
-#include"heap_sort.h"
 #include<stdio.h>
-#include<malloc.h>
+#include<stdlib.h>
 #include"fileio.h"
 #include<string.h>
-int Is_Minheap(int heap[], int heap_size ,int root)//这个root是heap下标
+void swap(int &a, int &b)
+{
+	int tmp = b;
+	b = a;
+	a = tmp;
+}
+void heapify(int list[], int i,int heapsize)
+{
+	int smallest=i;
+	if (2*i<=heapsize&&list[smallest-1] > list[2 * i - 1])
+	{
+		smallest = 2 * i;
+	}
+	if ((2*i+1)<=heapsize&&list[smallest - 1] > list[2 * i + 1 - 1])
+	{
+		smallest = 2 * i + 1;
+	}
+	if (smallest != i)
+	{
+		swap(list[smallest - 1], list[i - 1]);
+		heapify(list, smallest, heapsize);
+	}
+
+}
+void build_heap(int list[], int n)
+{
+	int heapsize = n;
+	for (int i = n / 2; i > 0; i--)
+	{
+		heapify(list, i, heapsize);
+	}
+}
+
+int Is_Minheap(int heap[], int heap_size ,int root)//锟斤拷锟絩oot锟斤拷heap锟铰憋拷
 {
 	if (2 * root <= heap_size )
 	{
@@ -21,7 +53,7 @@ int Is_Minheap(int heap[], int heap_size ,int root)//这个root是heap下标
 }
 int bi_heap_build(int heap[], int &heap_size,int ,int)
 {
-	build_heap(heap, heap_size,1);
+	build_heap(heap, heap_size);
 	return 1;
 }
 void bi_heap_decrease_tmp(int heap[], int heap_size, int i, int key_k)
@@ -81,7 +113,7 @@ int bi_heap_extract_min(int heap[], int &heap_size,int ,int)
 	int min = heap[0];
 	heap[0] = heap[heap_size - 1];
 	heap_size--;
-	heapify(heap, 1,heap_size,1);
+	heapify(heap, 1,heap_size);
 	return min;
 }
 int bi_heap_delete(int heap[], int &heap_size, int key,int)

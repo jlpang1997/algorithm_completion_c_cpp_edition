@@ -1,6 +1,0 @@
-1,最重要是学会了如何使用函数数组 
-void(*sort_func_wrapper[N])(int list[], int n) = { heap_sort,quick_sort,merge_sort,counting_sort }; 
-定义一个数组，数组的每一个元素都是可以直接调用的平凡函数，由此，对同类型的函数进行测试的时候就可以批量
-进行，提高速率。
-2，巩固了微秒计时QueryPerformance
-3，稍微算是复习了一些排序算法，以及一些c语言语法

@@ -1,6 +1,6 @@
 #include"fibo_heap.h"
 #include<stdio.h>
-#include<malloc.h>
+#include<stdlib.h>
 #include<math.h>
 
 void add_fibo_node(Fibo_node *node, Fibo_node *root)
@@ -35,7 +35,7 @@ int fibo_heap_insert(Fibo_heap &fibo_heap, int *, int, int x, int)
 	return -1;
 	
 }
-int fibo_heap_build(Fibo_heap &fibo_heap, int*data, int n, int, int)//°üº¬ÁË³õÊ¼»¯
+int fibo_heap_build(Fibo_heap &fibo_heap, int*data, int n, int, int)//ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½Ê¼ï¿½ï¿½
 {
 	fibo_heap.rootnum = 0;
 	fibo_heap.keynum = 0;
@@ -100,13 +100,13 @@ int fibo_heap_extract_min(Fibo_heap &fibo_heap, int *, int, int, int)
 			fibo_heap.keynum--;
 		}
 		
-		return z->key;//»¹Ã»ÊÍ·Å
+		return z->key;//ï¿½ï¿½Ã»ï¿½Í·ï¿½
 	}
 	
 }
 void CONSOLIDATE(Fibo_heap &fibo_heap)
 {
-	int dn = (int)(log(fibo_heap.keynum)/log(2))+1;//Õâ¸ödnµ½µ×¿¿²»¿¿Æ×°¡£¿·Ö·ÖÖÓÊý×éÒç³öÔõÃ´°ì£¿
+	int dn = (int)(log(fibo_heap.keynum)/log(2))+1;//ï¿½ï¿½ï¿½dnï¿½ï¿½ï¿½×¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×°ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã´ï¿½ì£¿
 	//print_fibo(fibo_heap);
 	Fibo_node **A = (Fibo_node**)malloc(sizeof(Fibo_node*)*(dn + 1));
 	for (int i = 0; i < (dn + 1); i++)
@@ -139,7 +139,7 @@ void CONSOLIDATE(Fibo_heap &fibo_heap)
 	} while (w != end);
 	int root_num = 0;
 	int min = -1;
-	for (int i = 0; i < (dn + 1); i++)//ÕÒµ½×îÐ¡µÄ¸ù
+	for (int i = 0; i < (dn + 1); i++)//ï¿½Òµï¿½ï¿½ï¿½Ð¡ï¿½Ä¸ï¿½
 	{
 		if (A[i])
 		{
@@ -187,7 +187,7 @@ int fibo_heap_decrease(Fibo_heap &fibo_heap, int *, int, int value, int k)
 {
 	if (k > value)
 	{
-		printf("Ó¦¸ÃÊäÈëÒ»¸ö¼õÐ¡µÄÖµ\n");
+		printf("Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½Öµ\n");
 		return -1;
 	}
 	if (value == 242)
@@ -196,7 +196,7 @@ int fibo_heap_decrease(Fibo_heap &fibo_heap, int *, int, int value, int k)
 	Fibo_node*x=fibo_heap_search(fibo_heap.min, fibo_heap.rootnum, value);
 	if (!x)
 	{
-		printf("Ã»ÓÐÕÒµ½Òª¼õÐ¡µÄÖµ\n");
+		printf("Ã»ï¿½ï¿½ï¿½Òµï¿½Òªï¿½ï¿½Ð¡ï¿½ï¿½Öµ\n");
 		return -1;
 	}
 	x->key = k;

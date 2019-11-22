@@ -1,7 +1,7 @@
 #include"fileio.h"
 #include<stdio.h>
 #include<string.h>
-#include<malloc.h>
+#include<stdlib.h>
 
 void get_data(int datanum,const char *func_name,int *&data, int &n)
 {

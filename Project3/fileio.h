@@ -1,10 +1,10 @@
 #pragma once
 #define DATASET 5
-#define FUNC_NUM 5//¶¨ÒåÎåÖÖ²Ù×÷
+#define FUNC_NUM 5//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½
 #define HEAPTYPE_NUM 2
 enum Output_flag { start_output,continue_output, end_output };
 enum Heaptype {binary,fibo};
-enum Output_type{result,time};
+
 void get_data(int datanum,const char *,int *&data, int &n);
 void output_result(int min,Output_flag flag, Heaptype, int datanum);
 void output_time(double runtime, Output_flag flag, Heaptype, int datanum,const char *func_name);
