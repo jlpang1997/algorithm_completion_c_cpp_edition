@@ -2,12 +2,12 @@
 #include<stdio.h>
 #include<string.h>
 #include<time.h>
-#include<malloc.h>
+#include<stdlib.h>
 #include"fileio.h"
 
 void test_input(int mn_pair[][PAIR_NUM][2])
 {
-	for (int i = 0; i < GROUP_NUM; i++)//¼ì²éÃ¿Ò»×éµÄinputÎÄ¼þ
+	for (int i = 0; i < GROUP_NUM; i++)//ï¿½ï¿½ï¿½Ã¿Ò»ï¿½ï¿½ï¿½inputï¿½Ä¼ï¿½
 	{
 		char filepath[100] = { '\0' };
 		strcat(filepath, "../input/input");
@@ -16,7 +16,7 @@ void test_input(int mn_pair[][PAIR_NUM][2])
 		strcat(filepath, tmp);
 		strcat(filepath, ".txt");
 		FILE *fp = fopen(filepath, "r");
-		if (!fp)//´ò²»¿ª£¬ËµÃ÷Ã»ÓÐ¸ø¶¨ÊäÈëÎÄ¼þ£¬ÄÇ¾Í×Ô¼ºËæ»úÉú³ÉÒ»¸ö
+		if (!fp)//ï¿½ò²»¿ï¿½ï¿½ï¿½Ëµï¿½ï¿½Ã»ï¿½Ð¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
 		{
 			fp = fopen(filepath, "w");
 			for (int j = 0; j < PAIR_NUM; j++)
@@ -98,6 +98,6 @@ void dp_output_result(int mn[], char *lcs, int len,long time)
 	fprintf(fp_result, "(%3d,%3d)   %3d   %s\n", m, n, len, lcs);
 	//fprintf(fp_time, "(%3d,%3d)   %3d\n", m, n, time);
 	//fprintf(fp_time, "%3d\n", m+n);
-	fprintf(fp_time, "%3d\n",time);
+	fprintf(fp_time, "%3ld\n",time);
 
 }

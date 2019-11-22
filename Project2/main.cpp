@@ -1,5 +1,5 @@
 #include<iostream>
-#include<Windows.h>
+#include<sys/time.h>
 #include"fileio.h"
 #include"lcs.h"
 
@@ -13,16 +13,16 @@ int main()
 			{15,26},{30,26},{45,26},{60,26},{75,26},{90,26}
 		}
 	};
-	test_input(mn_pair);//¼ì²éÊÇ·ñÓĞ¸øÊäÈëÎÄ¼ş£¬Èç¹ûÃ»¸ø×Ô¼º¾ÍËæ»úÉú³ÉÒ»¸ö
+	test_input(mn_pair);//ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ğ¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
 	outputfileopen();
 	for (int i = 0; i < 2; i++)
 	{
-		inputfileopen(i);//´ò¿ª¶ÔÓ¦×éµÄinputÎÄ¼ş
+		inputfileopen(i);//ï¿½ò¿ª¶ï¿½Ó¦ï¿½ï¿½ï¿½inputï¿½Ä¼ï¿½
 		for (int j = 0; j < 6; j++)
 		{
 			long time;
-			LARGE_INTEGER begintime;
-			LARGE_INTEGER finishtime;
+			struct timeval start, end;
+			//LARGE_INTEGER begintime,finishtime;
 			int m = mn_pair[i][j][0];
 			int n = mn_pair[i][j][1];
 			char *X=NULL;
@@ -31,10 +31,13 @@ int main()
 			int **c=NULL,**b=NULL;
 			init_cb(mn_pair[i][j], c, b);
 
-			QueryPerformanceCounter(&begintime);
+			//QueryPerformanceCounter(&begintime);
+			gettimeofday( &start, NULL );
 			lcs_length(X, Y, c, b, mn_pair[i][j]);
-			QueryPerformanceCounter(&finishtime);//Ö»²âÊÔÕÒµ½³¤¶ÈµÄÊ±¼ä
-			time= finishtime.QuadPart - begintime.QuadPart;
+			gettimeofday( &end, NULL );
+			time=1000000 * ( end.tv_sec - start.tv_sec ) + end.tv_usec - start.tv_usec;
+			//QueryPerformanceCounter(&finishtime);//Ö»ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½Èµï¿½Ê±ï¿½ï¿½
+			//time= finishtime.QuadPart - begintime.QuadPart;
 
 			char *lcs = NULL;
 			get_lcs(b, X, mn_pair[i][j] , lcs,c[m][n]);

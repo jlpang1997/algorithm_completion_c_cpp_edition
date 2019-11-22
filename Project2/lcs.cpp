@@ -1,5 +1,5 @@
 #include"lcs.h"
-#include<malloc.h>
+#include<stdlib.h>
 void init_cb(int mn[], int **&c, int **&b)
 {
 	int m = mn[0];
@@ -24,7 +24,7 @@ void lcs_length(char *X, char* Y, int **c, int **b, int mn[2])
 	{
 		for (int j = 1; j <= n; j++)
 		{
-			if (X[i - 1] == Y[j - 1])//¸ú¿Î±¾ÏÂ±ê²»Ò»ÖÂ
+			if (X[i - 1] == Y[j - 1])//ï¿½ï¿½ï¿½Î±ï¿½ï¿½Â±ê²»Ò»ï¿½ï¿½
 			{
 				c[i][j] = c[i - 1][j - 1] + 1;
 				b[i][j] = 1;
