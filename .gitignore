@@ -4,6 +4,7 @@
 *.exe
 *.o
 *.obj
+output/./*
 
 
 # User-specific files
