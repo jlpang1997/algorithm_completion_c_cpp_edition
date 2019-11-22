@@ -1,5 +1,5 @@
 #include"optimal_bst.h"
-#include<malloc.h>
+#include<stdlib.h>
 #include<stdio.h>
 void optimal_bst(double *p, double *q, int n, double **&e, int **&root)
 {
@@ -10,7 +10,7 @@ void optimal_bst(double *p, double *q, int n, double **&e, int **&root)
 		e[i] = (double*)malloc(sizeof(double)*(n + 1));
 		w[i] = (double*)malloc(sizeof(double)*(n + 1));
 	}
-	root = (int **)malloc(sizeof(int *)*(n + 1));//ÓÃroot¼ÇÂ¼ÏÂÀ´Ã¿¸ö×ÓÊ÷¶ÔÓ¦µÄ¸ù½Úµã
+	root = (int **)malloc(sizeof(int *)*(n + 1));//ï¿½ï¿½rootï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ä¸ï¿½ï¿½Úµï¿½
 	for (int i = 1; i <= n; i++)
 		root[i] = (int *)malloc(sizeof(int)*(n + 1));
 	

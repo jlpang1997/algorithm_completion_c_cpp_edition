@@ -1,7 +1,7 @@
 #include"fileio.h"
 #include<stdio.h>
 #include<iostream>
-#include<malloc.h>
+#include<stdlib.h>
 FILE* fp_input;
 void inputfileopen()
 {
@@ -57,7 +57,7 @@ void get_input(double *&p, double *&q, int &n)
 }
 void output_result(long time, int **root,double e,int n)
 {
-	fprintf(fp_time, "%3d   %d\n", n, time);
+	fprintf(fp_time, "%3d   %ld\n", n, time);
 	//fprintf(fp_time, "%3d\n", time);
 	fprintf(fp_result, "%3d        %.2lf ",n,e);
 	fprint_preorder(root, 1, n);
@@ -68,13 +68,13 @@ void fprint_preorder(int **root, int p, int r)
 	if (p <= r)
 	{
 		int q = root[p][r];
-		fprintf(fp_result, "k%d ",q);//ÏÈÐò±éÀúÊä³ö½á¹û
+		fprintf(fp_result, "k%d ",q);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		fprint_preorder(root, p, q - 1);
 		fprint_preorder(root, q + 1, r);
 	}
 	else
 	{
-		fprintf(fp_result, "d%d ", p - 1);//·ÃÎÊÒ¶½Úµã
+		fprintf(fp_result, "d%d ", p - 1);//ï¿½ï¿½ï¿½ï¿½Ò¶ï¿½Úµï¿½
 	}
 }
 void create_input(int smallest, int biggest)
@@ -102,7 +102,7 @@ void create_input(int smallest, int biggest)
 			printf("OVERFLOW\n");
 			exit(0);
 		}
-		if (n % 2 == 0)//Èç¹ûÇ¡ºÃÊÇÅ¼ÊýµÄ»°£¬°Ñ×îºóÒ»¸ö²¢Èëµ¹ÊýµÚ¶þ¸ö
+		if (n % 2 == 0)//ï¿½ï¿½ï¿½Ç¡ï¿½ï¿½ï¿½ï¿½Å¼ï¿½ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ëµ¹ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½
 		{
 			list[n - 2] += list[n - 1];
 			n--;
