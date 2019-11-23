@@ -12,4 +12,4 @@ int bi_heap_search(int heap[],int heap_size, int value);//ï¿½ï¿½ï¿½ï¿½valueï¿½ï¿
 
 void swap(int &a, int &b);
 void build_heap(int list[], int n, int flag);
-void heapify(int list[], int i, int heapsize, int flag);
+void heapify(int list[], int i, int heapsize, int flag);  
