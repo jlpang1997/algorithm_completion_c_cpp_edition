@@ -25,9 +25,6 @@ void heapify(int list[], int i,int heapsize,int flag)
 		swap(list[lar_sml - 1], list[i - 1]);
 		heapify(list, lar_sml, heapsize, flag);
 	}
-
-
-
 }
 void build_heap(int list[], int n,int flag)
 {

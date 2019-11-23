@@ -115,8 +115,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Project1\heap_sort.cpp" />
-    <ClCompile Include="..\Project1\quick_sort.cpp" />
     <ClCompile Include="binary_heap.cpp" />
     <ClCompile Include="fibo_heap.cpp" />
     <ClCompile Include="fileio.cpp" />
@@ -128,6 +126,12 @@
     <ClInclude Include="binary_heap.h" />
     <ClInclude Include="fibo_heap.h" />
     <ClInclude Include="fileio.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,9 +1,17 @@
 #include"binary_heap.h"
-#include"heap_sort.h"
 #include<stdio.h>
 #include<malloc.h>
 #include"fileio.h"
 #include<string.h>
+int bi_heap_search(int heap[], int heap_size,int value)//返回value的数组下标i
+{
+	int i;
+	for (i = 0; i < heap_size&&heap[i] != value; i++);
+	if (i >= heap_size)
+		return -1;
+	else
+		return i;
+}
 int Is_Minheap(int heap[], int heap_size ,int root)//这个root是heap下标
 {
 	if (2 * root <= heap_size )
@@ -24,24 +32,25 @@ int bi_heap_build(int heap[], int &heap_size,int ,int)
 	build_heap(heap, heap_size,1);
 	return 1;
 }
-void bi_heap_decrease_tmp(int heap[], int heap_size, int i, int key_k)
+int bi_heap_decrease_tmp(int heap[], int &heap_size, int i, int key_k)
 {
 	if (i >= heap_size)
 	{
 		printf("%d out of heap_size\n",i );
-		return;
+		return -1;
 	}
 	if (heap[i] < key_k)
 	{
 		printf("new key is bigger than current key\n");
-		return;
+		return -1;
 	}
 	heap[i] = key_k;
+	//往上，一直到维持最小堆的性质
 	for (; i > 0 && heap[(i + 1) / 2 - 1] > heap[i]; i = (i + 1) / 2 - 1)
 	{
 		swap(heap[(i + 1) / 2 - 1], heap[i]);
 	}
-	return;
+	return 1;
 }
 int bi_heap_decrease(int heap[], int &heap_size,int key_x, int key_k)
 {
@@ -66,6 +75,7 @@ int bi_heap_decrease(int heap[], int &heap_size,int key_x, int key_k)
 }
 int bi_heap_insert(int heap[], int &heap_size, int key,int )
 {
+	//直接在heap最后插入一个正无穷，然后decrease到key
 	heap_size++;
 	heap[heap_size - 1] = MYINFINITY;
 	bi_heap_decrease_tmp(heap, heap_size, heap_size - 1, key);
@@ -73,6 +83,7 @@ int bi_heap_insert(int heap[], int &heap_size, int key,int )
 }
 int bi_heap_extract_min(int heap[], int &heap_size,int ,int)
 {
+	/*同heapsort，每次取出root，然后进行一次heapify*/
 	if (heap_size < 1)
 	{
 		printf("heap underflow\n");
@@ -84,8 +95,10 @@ int bi_heap_extract_min(int heap[], int &heap_size,int ,int)
 	heapify(heap, 1,heap_size,1);
 	return min;
 }
-int bi_heap_delete(int heap[], int &heap_size, int key,int)
+int bi_heap_delete(int heap[], int &heap_size, int i,int)
 {
+	//把对应值decrease到负无穷，然后extract-min
+	
 	//if (heap_size < 1)
 	//{
 	//	printf("heap underflow\n");
@@ -115,7 +128,50 @@ int bi_heap_delete(int heap[], int &heap_size, int key,int)
 	//{
 	//	heapify(heap, i + 1, heap_size,1);
 	//}
-	bi_heap_decrease(heap, heap_size, key, -MYINFINITY);
+	bi_heap_decrease_tmp(heap, heap_size, i, -MYINFINITY);
 	bi_heap_extract_min(heap, heap_size);
 	return 1;
+}
+
+
+void swap(int &a, int &b)
+{
+	int tmp = b;
+	b = a;
+	a = tmp;
+}
+void heapify(int list[], int i, int heapsize, int flag)
+{
+	int largest = i;
+	int smallest = i;
+	if (2 * i <= heapsize)
+	{
+		if (list[i - 1] < list[2 * i - 1])
+			largest = 2 * i;
+		else
+			smallest = 2 * i;
+	}
+
+	if ((2 * i + 1) <= heapsize && list[largest - 1] < list[2 * i + 1 - 1])
+	{
+		largest = 2 * i + 1;
+	}
+	if ((2 * i + 1) <= heapsize && list[smallest - 1] > list[2 * i + 1 - 1])
+	{
+		smallest = 2 * i + 1;
+	}
+	int lar_sml = (flag == 0) ? largest : smallest;
+	if (lar_sml != i)
+	{
+		swap(list[lar_sml - 1], list[i - 1]);
+		heapify(list, lar_sml, heapsize, flag);
+	}
+}
+void build_heap(int list[], int n, int flag)
+{
+	int heapsize = n;
+	for (int i = n / 2; i > 0; i--)
+	{
+		heapify(list, i, heapsize, flag);
+	}
 }
