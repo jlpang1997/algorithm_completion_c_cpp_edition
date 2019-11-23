@@ -21,11 +21,11 @@ typedef struct Fibo_heap
 }Fibo_heap;
 void add_fibo_node(Fibo_node *node, Fibo_node *root);//加入的条件是不为空
 void print_fibo(Fibo_heap fibo_heap);
-int fibo_heap_build(Fibo_heap &fibo_heap, int*data, int n,int,int);
-int fibo_heap_insert(Fibo_heap &fibo_heap,int *,int, int x,int);
-int fibo_heap_decrease(Fibo_heap &fibo_heap, int *,int,int value, int k);
-int fibo_heap_delete(Fibo_heap &fibo_heap, int *,int ,int value,int);
-int fibo_heap_extract_min(Fibo_heap &fibo_heap,int *,int ,int ,int);
+int fibo_heap_build(Fibo_heap &fibo_heap, int*data, int n, Fibo_node*,int);
+int fibo_heap_insert(Fibo_heap &fibo_heap,int *,int, Fibo_node*,int);
+int fibo_heap_decrease(Fibo_heap &fibo_heap, int *,int, Fibo_node*, int k);
+int fibo_heap_delete(Fibo_heap &fibo_heap, int *,int , Fibo_node*,int);
+int fibo_heap_extract_min(Fibo_heap &fibo_heap,int *,int , Fibo_node*,int);
 
 void CONSOLIDATE(Fibo_heap &fibo_heap);
 void fib_heap_link(Fibo_heap &fibo_heap, Fibo_node*y, Fibo_node*x);
