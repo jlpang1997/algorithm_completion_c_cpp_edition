@@ -1,0 +1,8 @@
+cmake_minimum_required (VERSION 2.8)
+project(vscode_cmake_test)
+set(CMAKE_CXX_COMPILER "g++")
+set (CMAKE_CXX_FLAGS  "-g -fexec-charset=GBK")
+include_directories(${PROJECT_SOURCE_DIR}/Include)
+aux_source_directory(./Src SrcFiles)
+set(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/Bin)
+add_executable(my ${SrcFiles})
