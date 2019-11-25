@@ -1,0 +1,5 @@
+.vscode/
+build.bat
+CMakeLists.txt
+Bin/*
+build/*
