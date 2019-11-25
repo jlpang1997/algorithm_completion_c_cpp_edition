@@ -1,4 +1,4 @@
 @echo off
-cd .\Build
-cmake -G "MinGW Makefiles" .. > TriffleInfo
+cd ./Build
+cmake -G "Unix Makefiles" .. > TriffleInfo
 make

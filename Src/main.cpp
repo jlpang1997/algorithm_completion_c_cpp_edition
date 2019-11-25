@@ -1,9 +1,6 @@
 
-#include"../Include/a.h"
-#include"../Include/b.h"
-
+#include<stdio.h>
 int main(int agec, char **argv) {
-    print();
-    g();
+    printf("hello world");
     return 0;
 }
