@@ -1,2 +1,4 @@
 Bin/*
-build/*
+Build/C*
+Build/T*
+Build/c*
