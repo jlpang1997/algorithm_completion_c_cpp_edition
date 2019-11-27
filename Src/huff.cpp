@@ -9,7 +9,7 @@ int main(int argc,char *argv[])
     LARGE_INTEGER li;
     LONGLONG start, end, freq;
     char *init_filepath="D:\\Chrome_Download\\a.test.downloading";
-    // char *init_filepath="C:\\Users\\庞进林\\source\\huff\\test.txt";
+    // // char *init_filepath="C:\\Users\\庞进林\\source\\huff\\test.txt";
     // char *init_filepath="C:\\Users\\庞进林\\Music\\Music\\薛之谦 - 丑八怪+演员.flac";
 
     QueryPerformanceFrequency(&li);
@@ -183,7 +183,9 @@ void get_encode_file(char *filepath)
     double ratio=(100*(double)(size-total_bytes)/size);
     sprintf(&x[20-len],"reduction ratio:%.2f%%",ratio);
     printf("%s",x);
-
+    FILE*fp_result=fopen("./Test/result.txt","a");
+    fprintf(fp_result,"two bytes\t%10s%s\t%10.2fKB\t%10.2fKB\t%.2f%%\n",file_name,file_type,(double)size/1024,(double)total_bytes/1024,ratio);
+    fclose(fp_result);
     free(weight);
     free(Huff_tree);
     // for(int i=0;i<count;i++)free(map[i]);
