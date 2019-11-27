@@ -184,7 +184,7 @@ void get_encode_file(char *filepath)
     sprintf(&x[20-len],"reduction ratio:%.2f%%",ratio);
     printf("%s",x);
     FILE*fp_result=fopen("./Test/result.txt","a");
-    fprintf(fp_result,"two bytes\t%10s%s\t%10.2fKB\t%10.2fKB\t%.2f%%\n",file_name,file_type,(double)size/1024,(double)total_bytes/1024,ratio);
+    fprintf(fp_result,"two bytes\t%s%s\t%.2fKB\t%.2fKB\t%.2f%%\n",file_name,file_type,(double)size/1024,(double)total_bytes/1024,ratio);
     fclose(fp_result);
     free(weight);
     free(Huff_tree);
