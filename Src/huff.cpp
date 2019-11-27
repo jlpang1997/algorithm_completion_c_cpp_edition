@@ -8,7 +8,8 @@ int main(int argc,char *argv[])
 {   
     LARGE_INTEGER li;
     LONGLONG start, end, freq;
-    char *init_filepath="D:\\Chrome_Download\\a.test.jpg";
+    char *init_filepath="D:\\Chrome_Download\\a.test.downloading";
+    // char *init_filepath="C:\\Users\\庞进林\\source\\huff\\test.txt";
 
     QueryPerformanceFrequency(&li);
     freq = li.QuadPart;
@@ -72,6 +73,7 @@ void get_encode_file(char *filepath)
     char file_huff[100]="./Test/";
     strcat(file_huff,file_name);
     strcat(file_huff,".huff");//获取huff压缩文件名和路径
+    // printf("%s\n",file_huff);
 
     FILE*fp=fopen(filepath,"rb");
     FILE*fp_huff=fopen(file_huff,"wb");
@@ -113,18 +115,26 @@ void get_encode_file(char *filepath)
         if(((100*(double)cur_total_bytes)/size)>per)
             print_progress(++per,"encoding:");
         cur_total_bytes++;
-        int code_n=strlen(map[ch]);
-        for(int i=0;i<code_n;i++)
+
+        char str[9]="";
+        my_itoa(ch,str,8);
+        for(int k=0;k<8;k+=4)
         {
-            byte[bit_n++]=map[ch][i];
-            if(bit_n==8)
+            unsigned char num=my_atoi(&str[k],4);
+            int code_n=strlen(map[num]);
+            for(int i=0;i<code_n;i++)
             {
-                unsigned char new_byte=my_atoi(byte,8);
-                fputc(new_byte,fp_huff);
-                total_bytes++;
-                bit_n=0;
-            }
+                byte[bit_n++]=map[num][i];
+                if(bit_n==8)
+                {
+                    unsigned char new_byte=my_atoi(byte,8);
+                    fputc(new_byte,fp_huff);
+                    total_bytes++;
+                    bit_n=0;
+                }
+            }            
         }
+
         ch=fgetc(fp);
     }
     init_end=bit_n;
@@ -173,7 +183,7 @@ void get_decode_file(char*filepath)
 
 
     
-
+    // printf("%s\n",filepath);
     int init_end;
     fread(&init_end,sizeof(int),1,fp_huff);
 
@@ -202,6 +212,8 @@ void get_decode_file(char*filepath)
     ch=fgetc(fp_huff);
     int cur_total=0;
     unsigned p=root;
+    char str[9]="";
+    int flag_byte1=0;
 
     int per=-1;
     printf("\n");
@@ -211,7 +223,7 @@ void get_decode_file(char*filepath)
             print_progress(++per,"decoding:");
         cur_total++;
         char byte_str[9]="";
-        my_itoa(ch,byte_str);
+        my_itoa(ch,byte_str,8);
         int flag=(cur_total==total_bytes&&init_end)?init_end:8;
         for(int i=0;i<flag;i++)
         {
@@ -221,8 +233,24 @@ void get_decode_file(char*filepath)
                 p=Huff_tree[p].rchild;
             if(p<=count)
             {
-                fprintf(fp_init,"%c",(unsigned char)p-1);
-                byte_str[i]='\0';
+                if(flag_byte1==0)
+                {
+                    my_itoa(p-1,&str[0],4);
+                    flag_byte1=1;
+                }
+                else if(flag_byte1==1)
+                {
+                    my_itoa(p-1,&str[4],4);
+                    unsigned char num=my_atoi(str,8);
+                    fprintf(fp_init,"%c",num);
+                    flag_byte1=0;
+                }
+                // fprintf(fp_init,"%c",(unsigned char)p-1);
+
+
+
+
+                // byte_str[i]='\0';
                 // printf("%d:%s ",p-1,byte_str);
                 p=root;
             }
@@ -232,10 +260,6 @@ void get_decode_file(char*filepath)
     fclose(fp_huff);
     fclose(fp_init);
 }
-
-
-
-
 
 void huff_encode(long weight[],int count,Huff_node**Huff_tree,char ***map,int *root)//weight[10]=20 表示第11种类型有20个,weight . map 下标都从0开始
 {
@@ -290,7 +314,7 @@ void get_weight_from_file( char *filepath,long **weight,int *count)
         printf("%s file open failed\n",filepath);
         exit(0);
     }
-    *count=256;
+    *count=16;
     *weight=(long *)malloc(sizeof(long)*256);
     if(!*weight)
     {
@@ -302,7 +326,9 @@ void get_weight_from_file( char *filepath,long **weight,int *count)
     {
         (*weight)[i]=0;
     }
-    // memset(*weight,0,*count);
+    // memset(&(*weight)[0],0,*count);
+    // for(int i=0;i<*count;i++)
+    //     printf("%d ",(*weight)[i]);
     long size=get_file_size(fp);
     int per=-1;
     printf("\n");
@@ -315,8 +341,16 @@ void get_weight_from_file( char *filepath,long **weight,int *count)
         cur_totals++;
         if(100*(double)cur_totals/size>per)
             print_progress(++per,"weight-getting:");
+
+        char str[9]="";
+        my_itoa(ch,str,8);
+        unsigned char num=my_atoi(&str[0],4);
+        (*weight)[num]++;
+        num=my_atoi(&str[4],4);
+        (*weight)[num]++;
+
         // printf("%d\n",(*weight)[ch]);
-        (*weight)[ch]++;
+        // (*weight)[ch]++;
         // printf("%d\n",(*weight)[ch]);
         ch=fgetc(fp);
     }
@@ -396,10 +430,10 @@ unsigned char search_by_decode_map(unsigned long*decode_map,int count,char code[
     for(j=num%count;decode_map[j]!=num;j=(j+1)%count);
     return j;
 }
-void my_itoa(unsigned char ch,char num_str[10])
+void my_itoa(unsigned char ch,char num_str[9],int len)
 {
-    unsigned char num=128;
-    for(int i=0;i<8;i++)
+    unsigned char num=1<<(len-1);
+    for(int i=0;i<len;i++)
     {
         num_str[i]=ch/num+'0';
         ch%=num;

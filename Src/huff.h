@@ -20,7 +20,7 @@ void print_progress(int n);
 void get_encode_file( char*);
 void get_decode_file(char*filepath);
 
-void my_itoa(unsigned char ch,char num_str[10]);
+void my_itoa(unsigned char ch,char num_str[10],int len);
 unsigned char my_atoi(char num_str[],int len);
 
 unsigned char search_by_decode_map(unsigned long*decode_map,int count,char code[]);
