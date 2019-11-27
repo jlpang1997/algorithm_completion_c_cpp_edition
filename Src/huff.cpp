@@ -8,7 +8,7 @@ int main(int argc,char *argv[])
 {   
     LARGE_INTEGER li;
     LONGLONG start, end, freq;
-    char *init_filepath="D:\\Chrome_Download\\a.test.downloading";
+    char *init_filepath="D:\\Chrome_Download\\a.test.jpg";
 
     QueryPerformanceFrequency(&li);
     freq = li.QuadPart;
@@ -29,7 +29,7 @@ int main(int argc,char *argv[])
     
     
 
-    char *huff_filepath="./a.test.huff";
+    char *huff_filepath="./Test/a.test.huff";
     QueryPerformanceCounter(&li); 
     start = li.QuadPart;
     get_decode_file(huff_filepath);
@@ -48,7 +48,7 @@ int main(int argc,char *argv[])
 
 void get_encode_file(char *filepath)
 {
-    
+    int extra_bytes=0;
     long *weight;
     int count;
     get_weight_from_file(filepath,&weight,&count);
@@ -69,7 +69,7 @@ void get_encode_file(char *filepath)
     char file_name[100]="";
     strncpy(file_name,&filepath[j+1],i-j-1);//获取文件名
 
-    char file_huff[100]="./";
+    char file_huff[100]="./Test/";
     strcat(file_huff,file_name);
     strcat(file_huff,".huff");//获取huff压缩文件名和路径
 
@@ -80,19 +80,24 @@ void get_encode_file(char *filepath)
     int init_end=0;
     // fseek(fp_huff,sizeof(int)+sizeof(long),SEEK_SET);//留出给init_end和totalbytes的空间
     fwrite(&init_end,sizeof(int),1,fp_huff);
+    extra_bytes+=sizeof(int);
 
     long total_bytes=0;
     fwrite(&total_bytes,sizeof(long),1,fp_huff);
+    extra_bytes+=sizeof(long);
 
     fwrite(&root,sizeof(int),1,fp_huff);
+    extra_bytes+=sizeof(int);
 
     int type_len=strlen(file_type)+1;
     fwrite(&type_len,sizeof(int),1,fp_huff);
     fwrite(file_type,sizeof(char),type_len,fp_huff);//记录文件类型 把/0也写入
+    extra_bytes+=sizeof(char)*type_len;
 
     fwrite(&count,sizeof(int),1,fp_huff);
+    extra_bytes+=sizeof(int);
     fwrite(Huff_tree,sizeof(Huff_node),2*count,fp_huff);//记录哈夫曼树
-
+    extra_bytes+=sizeof(Huff_node)*2*count;
 
     long size=get_file_size(fp);
     long cur_total_bytes=-1;
@@ -144,6 +149,7 @@ void get_encode_file(char *filepath)
     char x[100]="";
     x[0]='\n';
     memset(&x[1],' ',20-1-len);
+    total_bytes+=extra_bytes;
     double ratio=(100*(double)(size-total_bytes)/size);
     sprintf(&x[20-len],"reduction ratio:%.2f%%",ratio);
     printf("%s",x);
@@ -162,7 +168,7 @@ void get_decode_file(char*filepath)
     for(;filepath[j]!='\\'&&filepath[j]!='/';j--);
     char file_name[100]="";
     strncpy(file_name,&filepath[j+1],i-1-j);
-    char init_file_path_name[100]="./";
+    char init_file_path_name[100]="./Test/";
     strcat(init_file_path_name,file_name);
 
 
