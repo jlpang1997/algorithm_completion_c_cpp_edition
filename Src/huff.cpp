@@ -153,6 +153,10 @@ void get_encode_file(char *filepath)
     double ratio=(100*(double)(size-total_bytes)/size);
     sprintf(&x[20-len],"reduction ratio:%.2f%%",ratio);
     printf("%s",x);
+    FILE*fp_result=fopen("./Test/result.txt","a");
+    fprintf(fp_result,"one byte\t%s%s\t%.2fKB\t%.2fKB\t%.2f%%\n",file_name,file_type,(double)size/1024,(double)total_bytes/1024,ratio);
+    fclose(fp_result);
+
     fclose(fp_huff);
     fclose(fp);
 }
