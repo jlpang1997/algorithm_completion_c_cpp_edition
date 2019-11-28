@@ -11,49 +11,121 @@
 
 int main(int argc,char *argv[])
 {   
-    LARGE_INTEGER li;
-    LONGLONG start, end, freq;
-    char *init_filepath="C:\\Users\\庞进林\\Pictures\\求实小学";
-    // // char *init_filepath="C:\\Users\\庞进林\\source\\huff\\test.txt";
-    // char *init_filepath="C:\\Users\\庞进林\\Music\\Music\\薛之谦 - 丑八怪+演员.flac";
+    char helpmessage[1000]="\
+Usage:huff <option> <target> ...\n\n\
+common usage:\n\
+    huff [-e | --encode] <src_dir | src_file> [destination_file | destination_file]\n\
+    huff [-d | --decode] <src.huff> [destination_file]\n\
+Options:\n\
+    -h, --help\t\t help message.\n\
+    -v, --version\tPrint version number of huff and exit.\n\
+    -e, --encode\t encode file or directory into .huff.\n\
+    -d, --decode\t decode .huff file into file or directory.\n\
+    \
+    ";
 
-    // QueryPerformanceFrequency(&li);
-    // freq = li.QuadPart;
+    char version_message[1000]="\
+huff version 1.0.0 on win.\n\
+    \
+    ";
 
-    // QueryPerformanceCounter(&li); 
-    // start = li.QuadPart;
-    get_encode_file(init_filepath);
-    // QueryPerformanceCounter(&li);
-    // end = li.QuadPart;
-    // double useTime =(end - start) / (double)freq;
-    // int len=strlen("total encode time:");
-    // char x[100]="";
-    // x[0]='\n';
-    // memset(&x[1],' ',20-1-len);
-    // sprintf(&x[20-len],"total encode time:%.6f s",useTime);
-    // printf("%s",x);
-    
-    
-    
+    char filepath[100]="";
+    char output[100]="";
+    if(argc==1){printf("%s\n",helpmessage);return 0;}
+    for(int i=1;i<=argc-1;i++)
+    {
+        if(strcmp(argv[i],"-h")==0||strcmp(argv[i],"--help")==0)
+        {
+            printf("%s\n",helpmessage);
+            return 0;
+        }
+        else if(strcmp(argv[i],"-v")==0||strcmp(argv[i],"--version")==0)
+        {
+            printf("%s\n",version_message);
+            return 0;
+        }
+        else if(strcmp(argv[i],"-e")==0||strcmp(argv[i],"--encode")==0)
+        {
+            if(i==argc-1)
+            {
+                printf("lack of src file or directory.\n");
+                return -1;
+            }
 
-    char *huff_filepath="./Test/求实小学.huff";
-    // QueryPerformanceCounter(&li); 
-    // start = li.QuadPart;
-    get_decode_file(huff_filepath);
-    // QueryPerformanceCounter(&li);
-    // end = li.QuadPart;
-    // useTime =(end - start) / (double)freq;
-    // len=strlen("total decode time:");
-    // char y[100]="";
-    // y[0]='\n';
-    // memset(&y[1],' ',20-1-len);
-    // sprintf(&y[20-len],"total decode time:%.6f s",useTime);
-    // printf("%s",y);
-    
+            get_correct_path(argv[i+1],filepath);
+            if(i+1!=argc-1)
+            {
+                // strcat(output,)
+                int len=strlen(output);
+                if(output[len-1]='\\'||output[len-1]=='/')
+                output[len-1]='\0';
+                get_correct_path(argv[i+2],output);
+                printf("%s\n",output);
+            }
+            else
+            {
+                output[0]='.';
+            }
+            
+            get_encode_file(filepath,output);
+            return 0;
+        }
+        else if(strcmp(argv[i],"-d")==0||strcmp(argv[i],"--decode")==0)
+        {
+            // printf("%s\n",argv[i+1]);
+            int len;
+            if(i==argc-1)
+            {
+                printf("lack of src file or directory.\n");
+                return -1;
+            }
+            char file[10]="";
+            len=strlen(argv[i+1]);
+            strcat(file,&argv[i+1][len-5]);
+            // printf("%s\n",file);
+            if(len<5||strcmp(".huff",file)!=0)
+            {
+                printf("src file is not .huff type\n");
+                return -1;
+            }
+            if(i+1!=argc-1)
+            {
+                // strcat(output,)
+                if(strcmp(output,".")==0||strcmp(output,"./")==0||strcmp(output,".\\")==0)
+                {
+                    output[0]='.';//默认情况 即当前文件夹
+                }
+                else
+                {
+                    int len=strlen(output);
+                    if(output[len-1]='\\'||output[len-1]=='/')
+                    output[len-1]='\0';
+                    get_correct_path(argv[i+2],output);
+                    printf("%s\n",output);
+                }
+                
+
+            }
+            else
+            {
+                output[0]='.';//默认情况 即当前文件夹
+            }
+            get_correct_path(argv[i+1],filepath);
+            get_decode_file(filepath,output);
+            return 0;
+        }
+        else
+        {
+            printf("input error\n%s\n",helpmessage);
+        }
+        
+
+    }
+
     return 0;
 }
 
-void get_encode_file(char *filepath)
+void get_encode_file(char *filepath,char *output)
 {
     int extra_bytes=0;
     long *weight;
@@ -69,15 +141,27 @@ void get_encode_file(char *filepath)
     int i=strlen(filepath);
     for(;filepath[i]!='\\'&&filepath[i]!='/';i--);
     char file_name[100]="";
-    strcpy(file_name,&filepath[i+1]);//获取文件名
+    strcpy(file_name,&filepath[i+1]);//获取文件夹名
+    printf("directory encoding:%s\n",file_name);
 
-    char file_huff[100]="./Test/";
-    strcat(file_huff,file_name);
-    strcat(file_huff,".huff");//获取huff压缩文件名和路径
-    // printf("%s\n",file_huff);
+    // char file_huff[100]="./";
+    strcat(output,"/");
+    strcat(output,file_name);
+    strcat(output,".huff");//获取huff压缩文件名和路径
+    printf("output file:%s\n",output);
 
     // FILE*fp=fopen(filepath,"rb");
-    FILE*fp_huff=fopen(file_huff,"wb");
+    FILE*fp_huff=fopen(output,"wb");
+    if(!fp_huff)
+    {
+        printf("%s  created failed. check the path.",output);
+        exit(0);
+    }
+    if(!fp_huff)
+    {
+        printf("%s Create failed\n",output);
+    }
+    // printf("huff file:%s\n",file_huff);
 
     //陆续开始存储解压要用到的数据
     
@@ -91,7 +175,25 @@ void get_encode_file(char *filepath)
 
     char relative_path[1000]="/";
     int file_num=0;
-    dir_encoding(fp_huff,filepath,map,relative_path,&file_num);
+   
+
+    FILE*fp=fopen(filepath,"rb");//如果是单个文件
+    if(fp)
+    {
+        printf("encodeing:%s\n",&filepath[1]);
+        
+        dir_visiting(fp,fp_huff,map,&filepath[1]);
+        file_num++;
+        fclose(fp);
+    }
+    else
+    {
+        dir_encoding(fp_huff,filepath,map,relative_path,&file_num);//这里默认使用了压缩文件夹
+    }
+    
+
+
+    
     fwrite(&file_num,sizeof(file_num),1,fp_huff);//文件个数放最后写
 
     free(weight);
@@ -99,20 +201,31 @@ void get_encode_file(char *filepath)
     free(map);
     fclose(fp_huff);
 }
-void get_decode_file(char*filepath)
+void get_decode_file(char*filepath,char *output)//规定，解压后一定有一个根文件夹
 {
+    // printf("filepath:%s\n",filepath);
 
     FILE*fp_huff=fopen(filepath,"rb");
-
+    if(!fp_huff)
+    {
+        printf("%s open failed.\n",filepath);
+        exit(0);
+    }
+    char file_name[100]="";
     int i=strlen(filepath);
     for(;i>=0&&filepath[i]!='.';i--);
     int j=i;
     for(;filepath[j]!='\\'&&filepath[j]!='/';j--);
-    char file_name[100]="";
-    strncpy(file_name,&filepath[j+1],i-1-j);
-    char init_file_path_name[1000]="./Test/";
-    strcat(init_file_path_name,file_name);//获取文件名
 
+    strncpy(file_name,&filepath[j+1],i-1-j);
+    printf("decoding:%s.huff\n",file_name);
+    char init_file_path_name[1000]="";
+    // printf("output:%s\n",output);
+    strcpy(init_file_path_name,output);
+    strcat(init_file_path_name,"/");
+    strcat(init_file_path_name,file_name);//获取文件夹名
+
+    // printf("dir:%s\n",init_file_path_name);
    
     int file_num;
     fseek(fp_huff,-sizeof(file_num),2);
@@ -136,13 +249,24 @@ void get_decode_file(char*filepath)
         fread(&len,sizeof(len),1,fp_huff);
         fread(relative_path,sizeof(char),len,fp_huff);
         relative_path[len-1]='\0';
-        // printf("读出路径:%s %d\n",relative_path,len);
+        // printf("读出路径:%s\n",relative_path);
         
         strcat(filepath_tmp,init_file_path_name);
         // printf("%s\n",filepath_tmp);
         strcat(filepath_tmp,relative_path);
         // printf("%s\n",filepath_tmp);
         FILE*fp_init=create_dir_file(filepath_tmp);
+        if(!fp_init)
+        {
+            printf("%s created failed.\n",filepath_tmp);
+            exit(0);
+        }
+        printf("decoding:%s\n",relative_path);
+        if(!fp_init)
+        {
+            printf("%s create failed.\n",filepath_tmp);
+            exit(0);
+        }
 
         int init_end;
         fread(&init_end,sizeof(init_end),1,fp_huff);
@@ -206,8 +330,8 @@ void huff_encode(long weight[],int count,Huff_node**Huff_tree,char ***map,int *r
         (*Huff_tree)[i].parent=0;
     }
     int i;
-    int per=-1;
-    printf("\n");
+    // int per=-1;
+    // printf("\n");
     for(i=count+1;i<count*2;i++)
     {
         // if(100*(i-count)/(count-1)>per)
@@ -245,7 +369,26 @@ void get_weight( char *filepath,long **weight,int *count)
         (*weight)[i]=0;
     }
     long total_bytes=0;
-    dir_weighting(filepath,*weight,&total_bytes);
+    
+    FILE*fp=fopen(filepath,"rb");//如果是单个文件
+    if(fp)
+    {
+        // printf("encodeing:%s\n",&filepath[1]);
+        unsigned char ch;
+        fread(&ch,sizeof(ch),1,fp);
+        while(feof(fp)==0)
+        {
+            (*weight)[ch]++;
+            fread(&ch,sizeof(ch),1,fp);
+        }
+        fclose(fp);
+        
+    }
+    else
+    {
+        dir_weighting(filepath,*weight,&total_bytes);//这里默认使用了压缩文件夹
+    }
+    
     return;
     
 }

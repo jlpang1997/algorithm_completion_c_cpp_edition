@@ -19,7 +19,7 @@ void print_progress(int n,char *title)
     strcat(x,"]");
     printf("%s",x);
 }
-FILE* create_dir_file(char *relative_path)
+FILE* create_dir_file(char *relative_path)//输入格式"./test/
 {
     // printf("%s\n",relative_path);
     int len=strlen(relative_path);
@@ -74,3 +74,63 @@ unsigned char my_atoi(char num_str[],int len)
     }
     return result;
 }
+
+int get_file_num(char *path)
+{
+    int file_num=0;
+    long hFile = 0;
+    struct _finddata_t fileInfo;
+    char filepath_name[1000]="";
+    strcat(filepath_name,path);
+    strcat(filepath_name,"\\*");
+    if ((hFile = _findfirst(filepath_name, &fileInfo)) == -1) {
+        return file_num;
+    }
+    int len=strlen(filepath_name);
+    filepath_name[len-1]='\0';
+    do {
+        
+        if(strcmp(".",fileInfo.name)==0||strcmp("..",fileInfo.name)==0)
+            continue;
+        if(fileInfo.attrib&_A_SUBDIR)
+        {
+            int len=strlen(filepath_name);
+            strcat(filepath_name,fileInfo.name);
+            file_num+=get_file_num(filepath_name);
+            filepath_name[len]='\0';
+        }
+        else 
+        {
+            file_num++;
+        }
+        
+    } while (_findnext(hFile, &fileInfo) == 0);
+    _findclose(hFile);
+    return file_num;
+}
+
+void get_correct_path(char *input,char *output)
+{
+    int len=strlen(input);
+    if(input[len-1]=='\\'||input[len-1]=='/')input[len-1]='\0';
+    if(input[0]=='.')
+    {
+        strcpy(output,input);
+
+        return ;
+    }
+    if(input[0]=='\\'||input[0]=='/')
+    {
+        output[0]='.';
+        strcat(output,input);
+        return ;
+    }
+    else if(input[0]!='.')
+    {
+        strcat(output,"./");
+        strcat(output,input);
+        return ;
+    }
+}
+
+

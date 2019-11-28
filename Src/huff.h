@@ -15,8 +15,8 @@ void get_huffcode(Huff_node*,int count,char **huffcode);
 void print_map(char *map[],int count);
 
 
-void get_encode_file( char*);
-void get_decode_file(char*filepath);
+void get_encode_file( char*,char *);
+void get_decode_file(char*filepath,char *);
 
 
 void get_decode_map(unsigned long**decode_map,char **map,int count);

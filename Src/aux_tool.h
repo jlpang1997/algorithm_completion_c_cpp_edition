@@ -9,3 +9,8 @@ long get_file_size(FILE*fp);
 void print_progress(int n,char *title);
 
 FILE* create_dir_file(char *relative_path);
+
+int get_file_num(char *filepath);
+
+void get_correct_path(char *input,char *output);
+

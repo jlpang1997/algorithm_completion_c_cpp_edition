@@ -1,5 +1,6 @@
 #include"dir.h"
 #include"aux_tool.h"
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -106,8 +107,9 @@ void dir_encoding(FILE*fp_huff,char *path,char **map,char *relative_path,int *fi
                 exit(0);
             }
             int len_rel=strlen(relative_path);
-            strcat(relative_path,fileInfo.name);
+            strcat(relative_path,fileInfo.name);//encoding 的时候是没有问题的
             // printf("%s\n",relative_path);
+            printf("encoding:%s\n",relative_path);
             dir_visiting(fp,fp_huff,map,relative_path);
             (*file_num)++;
             fclose(fp);
@@ -151,7 +153,7 @@ void dir_weighting(char * path,long *weight,long *total_bytes)
         {
             int len=strlen(filepath_name);
             strcat(filepath_name,fileInfo.name);
-            // printf("%d:%s\n",strlen(filepath_name),filepath_name);
+            // printf("visiting:%s\n",filepath_name);
             FILE*fp=fopen(filepath_name,"rb");
             if(!fp)
             {
