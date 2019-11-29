@@ -9,6 +9,8 @@ typedef struct Huff_node
     int parent;
 }Huff_node;
 
+void file_copy(char *src,char *des);
+
 
 void format_filepath(char *filepath);
 
@@ -21,10 +23,10 @@ void print_map(char *map[],int count);
 long get_file_size(FILE*fp);
 void print_progress(int n);
 
-void get_encode_file( char*,char *,int);
+double get_encode_file( char*,char *,int);
 void get_decode_file(char*filepath,char *output,int);
 
-void get_encode_file_recursion(char*init_filepath,char *huff_dir_file3,int MAX_TIME_ENCODE_TIME);
+double get_encode_file_recursion(char*init_filepath,char *huff_dir_file3);
 void get_decode_file_recursion(char*huff_filepath,char *init_dir_file0);
 
 

@@ -13,13 +13,15 @@ int main(int argc,char *argv[])
 {   
     for(int i=10;i<11;i++)
     {
+        // if(argc!=3)
+        //     return -1;
         min_rw_size=1<<i;
         read_buffer=(unsigned char*)malloc(sizeof(unsigned char)*min_rw_size);
         write_buffer=(unsigned char*)malloc(sizeof(unsigned char)*min_rw_size);
 
-        get_encode_file_recursion("D:\\Chrome_Download\\高一物理必修2知识点全总结.doc","D:\\Chrome_Download\\output.huff",4);
+        get_encode_file_recursion("D:\\Chrome_Download\\c.test.doc","D:\\Chrome_Download\\output.huff");
 
-        get_decode_file_recursion("D:\\Chrome_Download\\output.huff","D:\\Chrome_Download\\高一物理必修2知识点全总结.doc");
+        get_decode_file_recursion("D:\\Chrome_Download\\output.huff","D:\\Chrome_Download\\c.test.doc");
         // LARGE_INTEGER li;
         // LONGLONG start, end, freq;
         
@@ -84,7 +86,7 @@ int main(int argc,char *argv[])
     return 0;
 }
 
-void get_encode_file(char *filepath,char *output,int MAX_TIME_ENCODE_TIME)
+double get_encode_file(char *filepath,char *output,int MAX_TIME_ENCODE_TIME)
 {
     int extra_bytes=0;
     long *weight;
@@ -240,6 +242,8 @@ void get_encode_file(char *filepath,char *output,int MAX_TIME_ENCODE_TIME)
     fclose(fp_result);
     fclose(fp_huff);
     fclose(fp);
+    
+    return ratio/100;
 }
 void get_decode_file(char*filepath,char *output,int MAX_TIME_DECODE_TIME)
 {
