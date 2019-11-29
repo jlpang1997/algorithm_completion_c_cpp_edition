@@ -3,46 +3,61 @@
 #include<string.h>
 #include<windows.h>
 #include"huff.h"
-
+unsigned min_rw_size=1;
+unsigned char *read_buffer,*write_buffer;
 int main(int argc,char *argv[])
 {   
-    LARGE_INTEGER li;
-    LONGLONG start, end, freq;
-    char *init_filepath="D:\\Chrome_Download\\a.test.jpg";
+    for(int i=25;i<30;i++)
+    {
+        min_rw_size=1<<i;
+        read_buffer=(unsigned char*)malloc(sizeof(unsigned char)*min_rw_size);
+        write_buffer=(unsigned char*)malloc(sizeof(unsigned char)*min_rw_size);
+        LARGE_INTEGER li;
+        LONGLONG start, end, freq;
+        char *init_filepath="D:\\Chrome_Download\\a.test.downloading";
+// "D:\Chrome_Download\360safe+251289+n7ddbb65c96.exe"
+        QueryPerformanceFrequency(&li);
+        freq = li.QuadPart;
 
-    QueryPerformanceFrequency(&li);
-    freq = li.QuadPart;
+        QueryPerformanceCounter(&li); 
+        start = li.QuadPart;
+        get_encode_file(init_filepath);
+        QueryPerformanceCounter(&li);
+        end = li.QuadPart;
+        double useTime =(end - start) / (double)freq;
+        int len=strlen("total encode time:");
+        char x[100]="";
+        x[0]='\n';
+        memset(&x[1],' ',20-1-len);
+        sprintf(&x[20-len],"total encode time:%.6f s",useTime);
+        printf("%s",x);
+        FILE*fp_time=fopen("./Test/time.txt","a");
+        fprintf(fp_time,"file_size=%10d\tmin_rw_size=%10dB",get_file_size(fopen(init_filepath,"rb")),min_rw_size);
+        fprintf(fp_time,"\t%.6f",useTime);
+        
+        
 
-    QueryPerformanceCounter(&li); 
-    start = li.QuadPart;
-    get_encode_file(init_filepath);
-    QueryPerformanceCounter(&li);
-    end = li.QuadPart;
-    double useTime =(end - start) / (double)freq;
-    int len=strlen("total encode time:");
-    char x[100]="";
-    x[0]='\n';
-    memset(&x[1],' ',20-1-len);
-    sprintf(&x[20-len],"total encode time:%.6f s",useTime);
-    printf("%s",x);
-    
-    
-    
+        char *huff_filepath="D:\\Chrome_Download\\a.test.huff";
+        QueryPerformanceCounter(&li); 
+        start = li.QuadPart;
+        get_decode_file(huff_filepath);
+        QueryPerformanceCounter(&li);
+        end = li.QuadPart;
+        useTime =(end - start) / (double)freq;
+        len=strlen("total decode time:");
+        char y[100]="";
+        y[0]='\n';
+        memset(&y[1],' ',20-1-len);
+        sprintf(&y[20-len],"total decode time:%.6f s",useTime);
+        printf("%s",y);
+        
+        fprintf(fp_time,"\t%.6f\n",useTime);
+        fclose(fp_time);
+        free(read_buffer);
+        free(write_buffer);
 
-    char *huff_filepath="./Test/a.test.huff";
-    QueryPerformanceCounter(&li); 
-    start = li.QuadPart;
-    get_decode_file(huff_filepath);
-    QueryPerformanceCounter(&li);
-    end = li.QuadPart;
-    useTime =(end - start) / (double)freq;
-    len=strlen("total decode time:");
-    char y[100]="";
-    y[0]='\n';
-    memset(&y[1],' ',20-1-len);
-    sprintf(&y[20-len],"total decode time:%.6f s",useTime);
-    printf("%s",y);
-    
+    }
+
     return 0;
 }
 
@@ -69,13 +84,18 @@ void get_encode_file(char *filepath)
     char file_name[100]="";
     strncpy(file_name,&filepath[j+1],i-j-1);//获取文件名
 
-    char file_huff[100]="./Test/";
+    char file_huff[100]="D:\\Chrome_Download\\";
     strcat(file_huff,file_name);
     strcat(file_huff,".huff");//获取huff压缩文件名和路径
 
     FILE*fp=fopen(filepath,"rb");
     FILE*fp_huff=fopen(file_huff,"wb");
-
+    // printf("\n%s create.\n",file_huff);
+    if(!fp||!fp_huff)
+    {
+        printf("file open failed.\n");
+        exit(0);
+    }
     //陆续开始存储解压要用到的数据
     int init_end=0;
     // fseek(fp_huff,sizeof(int)+sizeof(long),SEEK_SET);//留出给init_end和totalbytes的空间
@@ -99,34 +119,104 @@ void get_encode_file(char *filepath)
     fwrite(Huff_tree,sizeof(Huff_node),2*count,fp_huff);//记录哈夫曼树
     extra_bytes+=sizeof(Huff_node)*2*count;
 
-    long size=get_file_size(fp);
+    
     long cur_total_bytes=-1;
     int per=-1;
     printf("\n");
-    unsigned ch;
-    ch=fgetc(fp);
+    unsigned char ch;
+    
     int bit_n=0;
     char byte[9]="";
 
-    while(feof(fp)==0)
+    long size=get_file_size(fp);
+    long read_num=size/min_rw_size;
+    unsigned last_size=size%min_rw_size;
+    unsigned cur_write_count=0;
+    for(long k=0;k<read_num;k++)
     {
-        if(((100*(double)cur_total_bytes)/size)>per)
-            print_progress(++per,"encoding:");
-        cur_total_bytes++;
-        int code_n=strlen(map[ch]);
-        for(int i=0;i<code_n;i++)
+        fread(read_buffer,1,min_rw_size,fp);
+        for(int j=0;j<min_rw_size;j++)
         {
-            byte[bit_n++]=map[ch][i];
-            if(bit_n==8)
+            ch=read_buffer[j];
+            // (*weight)[ch]++;
+            cur_total_bytes++;
+            if(((100*(double)cur_total_bytes)/size)>per)
+                print_progress(++per,"encoding:");
+            
+            int code_n=strlen(map[ch]);
+            for(int i=0;i<code_n;i++)
             {
-                unsigned char new_byte=my_atoi(byte,8);
-                fputc(new_byte,fp_huff);
-                total_bytes++;
-                bit_n=0;
+                byte[bit_n++]=map[ch][i];
+                if(bit_n==8)
+                {
+                    unsigned char new_byte=my_atoi(byte,8);
+                    // fputc(new_byte,fp_huff);
+                    write_buffer[cur_write_count++]=new_byte;
+                    if(cur_write_count==min_rw_size)
+                    {
+                        fwrite(write_buffer,1,min_rw_size,fp_huff);
+                        cur_write_count=0;
+                    }
+                    total_bytes++;
+                    bit_n=0;
+                }
             }
         }
-        ch=fgetc(fp);
     }
+    if(last_size)
+    {
+        fread(read_buffer,1,last_size,fp);
+        for(int j=0;j<last_size;j++)
+        {
+            ch=read_buffer[j];
+            // (*weight)[ch]++;
+            cur_total_bytes++;
+            if(((100*(double)cur_total_bytes)/size)>per)
+                print_progress(++per,"encoding:");
+            
+            int code_n=strlen(map[ch]);
+            for(int i=0;i<code_n;i++)
+            {
+                byte[bit_n++]=map[ch][i];
+                if(bit_n==8)
+                {
+                    unsigned char new_byte=my_atoi(byte,8);
+                    // fputc(new_byte,fp_huff);
+                    write_buffer[cur_write_count++]=new_byte;
+                    if(cur_write_count==min_rw_size)
+                    {
+                        fwrite(write_buffer,1,min_rw_size,fp_huff);
+                        cur_write_count=0;
+                    }
+                    total_bytes++;
+                    bit_n=0;
+                }
+            }
+        }
+
+    }
+    // ch=fgetc(fp);
+    // while(feof(fp)==0)
+    // {
+    //     if(((100*(double)cur_total_bytes)/size)>per)
+    //         print_progress(++per,"encoding:");
+    //     cur_total_bytes++;
+    //     int code_n=strlen(map[ch]);
+    //     for(int i=0;i<code_n;i++)
+    //     {
+    //         byte[bit_n++]=map[ch][i];
+    //         if(bit_n==8)
+    //         {
+    //             unsigned char new_byte=my_atoi(byte,8);
+    //             fputc(new_byte,fp_huff);
+    //             total_bytes++;
+    //             bit_n=0;
+    //         }
+    //     }
+    //     ch=fgetc(fp);
+    // }
+
+
     init_end=bit_n;
     if(bit_n!=0)
     {
@@ -135,11 +225,18 @@ void get_encode_file(char *filepath)
             byte[i]='0';
         }
         unsigned char new_byte=my_atoi(byte,8);
-        fputc(new_byte,fp_huff);
+        // fputc(new_byte,fp_huff);
+        write_buffer[cur_write_count++]=new_byte;
+        if(cur_write_count==min_rw_size)
+        {
+            fwrite(write_buffer,1,min_rw_size,fp_huff);
+            cur_write_count=0;
+        }
         (total_bytes)++;
         bit_n=0;
     }
-
+    if(cur_write_count)
+        fwrite(write_buffer,1,cur_write_count,fp_huff);
     if(fseek(fp_huff,0L,0)!=0)
         printf("返回失败\n");//定位回到开头
     fwrite(&init_end,sizeof(int),1,fp_huff);
@@ -164,6 +261,11 @@ void get_decode_file(char*filepath)
 {
 
     FILE*fp_huff=fopen(filepath,"rb");
+    if(!fp_huff)
+    {
+        printf("%s open failed.\n",filepath);
+        exit(0);
+    }
 
     int i=strlen(filepath);
     // for(;filepath[i]=='.';i++);
@@ -194,6 +296,13 @@ void get_decode_file(char*filepath)
     fread(file_type,sizeof(char),type_len,fp_huff);
     strcat(init_file_path_name,file_type);
     FILE*fp_init=fopen(init_file_path_name,"wb");
+    if(!fp_init)
+    {
+        printf("%s open failed.\n",init_file_path_name);
+        exit(0);
+    }
+    // printf("%s .\n",init_file_path_name);
+
 
     int count;
     fread(&count,sizeof(int),1,fp_huff);
@@ -201,38 +310,121 @@ void get_decode_file(char*filepath)
     Huff_node*Huff_tree=(Huff_node*)malloc(sizeof(Huff_node)*(2*count));
     fread(Huff_tree,sizeof(Huff_node),count*2,fp_huff);
 
+    int per=-1;
+    printf("\n");
 
     unsigned char ch;
-    ch=fgetc(fp_huff);
     int cur_total=0;
     unsigned p=root;
 
-    int per=-1;
-    printf("\n");
-    while(!feof(fp_huff))
+    long cur_total_bytes=0;
+    // long size=get_file_size(fp_huff);
+    long read_num=total_bytes/min_rw_size;
+    unsigned last_size=total_bytes%min_rw_size;
+    unsigned cur_write_count=0;
+    for(long k=0;k<read_num;k++)
     {
-        if(100*(double)cur_total/total_bytes>per)
-            print_progress(++per,"decoding:");
-        cur_total++;
-        char byte_str[9]="";
-        my_itoa(ch,byte_str);
-        int flag=(cur_total==total_bytes&&init_end)?init_end:8;
-        for(int i=0;i<flag;i++)
+        fread(read_buffer,1,min_rw_size,fp_huff);
+        for(int j=0;j<min_rw_size;j++)
         {
-            if(byte_str[i]=='0')
-                p=Huff_tree[p].lchild;
-            else
-                p=Huff_tree[p].rchild;
-            if(p<=count)
+            ch=read_buffer[j];
+            // (*weight)[ch]++;
+            if(100*(double)cur_total/total_bytes>per)
+                print_progress(++per,"decoding:");
+            cur_total++;
+            char byte_str[9]="";
+            my_itoa(ch,byte_str);
+            int flag=(cur_total==total_bytes&&init_end)?init_end:8;
+            for(int i=0;i<flag;i++)
             {
-                fprintf(fp_init,"%c",(unsigned char)p-1);
-                byte_str[i]='\0';
-                // printf("%d:%s ",p-1,byte_str);
-                p=root;
+                if(byte_str[i]=='0')
+                    p=Huff_tree[p].lchild;
+                else
+                    p=Huff_tree[p].rchild;
+                if(p<=count)
+                {
+                    // fprintf(fp_init,"%c",(unsigned char)p-1);
+                    write_buffer[cur_write_count++]=(unsigned char)p-1;
+                    if(cur_write_count==min_rw_size)
+                    {
+                        fwrite(write_buffer,1,min_rw_size,fp_init);
+                        cur_write_count=0;
+                    }
+                    byte_str[i]='\0';
+                    // printf("%d:%s ",p-1,byte_str);
+                    p=root;
+                }
             }
         }
-        ch=fgetc(fp_huff);
     }
+    if(last_size)
+    {
+        fread(read_buffer,1,last_size,fp_huff);
+        for(int j=0;j<last_size;j++)
+        {
+            ch=read_buffer[j];
+            if(100*(double)cur_total/total_bytes>per)
+                print_progress(++per,"decoding:");
+            cur_total++;
+            char byte_str[9]="";
+            my_itoa(ch,byte_str);
+            int flag=(cur_total==total_bytes&&init_end)?init_end:8;
+            for(int i=0;i<flag;i++)
+            {
+                if(byte_str[i]=='0')
+                    p=Huff_tree[p].lchild;
+                else
+                    p=Huff_tree[p].rchild;
+                if(p<=count)
+                {
+                    // fprintf(fp_init,"%c",(unsigned char)p-1);
+                    write_buffer[cur_write_count++]=(unsigned char)p-1;
+                    if(cur_write_count==min_rw_size)
+                    {
+                        fwrite(write_buffer,1,min_rw_size,fp_init);
+                        cur_write_count=0;
+                    }
+                    byte_str[i]='\0';
+                    // printf("%d:%s ",p-1,byte_str);
+                    p=root;
+                }
+            }
+        }
+    }
+    if(cur_write_count)
+        fwrite(write_buffer,1,cur_write_count,fp_init);
+
+    // unsigned char ch;
+    // ch=fgetc(fp_huff);
+    // int cur_total=0;
+    // unsigned p=root;
+
+    // int per=-1;
+    // printf("\n");
+    // while(!feof(fp_huff))
+    // {
+    //     if(100*(double)cur_total/total_bytes>per)
+    //         print_progress(++per,"decoding:");
+    //     cur_total++;
+    //     char byte_str[9]="";
+    //     my_itoa(ch,byte_str);
+    //     int flag=(cur_total==total_bytes&&init_end)?init_end:8;
+    //     for(int i=0;i<flag;i++)
+    //     {
+    //         if(byte_str[i]=='0')
+    //             p=Huff_tree[p].lchild;
+    //         else
+    //             p=Huff_tree[p].rchild;
+    //         if(p<=count)
+    //         {
+    //             fprintf(fp_init,"%c",(unsigned char)p-1);
+    //             byte_str[i]='\0';
+    //             // printf("%d:%s ",p-1,byte_str);
+    //             p=root;
+    //         }
+    //     }
+    //     ch=fgetc(fp_huff);
+    // }
     fclose(fp_huff);
     fclose(fp_init);
 }
@@ -308,22 +500,53 @@ void get_weight_from_file( char *filepath,long **weight,int *count)
     }
     // memset(*weight,0,*count);
     long size=get_file_size(fp);
+
+    
+
     int per=-1;
     printf("\n");
     long cur_totals=0;
     unsigned char ch;
-    ch=fgetc(fp);
-    
-    while(feof(fp)==0)
+
+    long read_num=size/min_rw_size;
+    unsigned last_size=size%min_rw_size;
+    for(long i=0;i<read_num;i++)
     {
-        cur_totals++;
-        if(100*(double)cur_totals/size>per)
-            print_progress(++per,"weight-getting:");
-        // printf("%d\n",(*weight)[ch]);
-        (*weight)[ch]++;
-        // printf("%d\n",(*weight)[ch]);
-        ch=fgetc(fp);
+        fread(read_buffer,1,min_rw_size,fp);
+        for(int j=0;j<min_rw_size;j++)
+        {
+            cur_totals++;
+            if(100*(double)cur_totals/size>per)
+                print_progress(++per,"weight-getting:");
+            ch=read_buffer[j];
+            (*weight)[ch]++;
+        }
     }
+    if(last_size)
+    {
+        fread(read_buffer,1,last_size,fp);
+        for(int j=0;j<last_size;j++)
+        {
+            cur_totals++;
+            if(100*(double)cur_totals/size>per)
+                print_progress(++per,"weight-getting:");
+            ch=read_buffer[j];
+            (*weight)[ch]++;
+        }
+
+    }
+    // ch=fgetc(fp);
+    
+    // while(feof(fp)==0)
+    // {
+    //     cur_totals++;
+    //     if(100*(double)cur_totals/size>per)
+    //         print_progress(++per,"weight-getting:");
+    //     // printf("%d\n",(*weight)[ch]);
+    //     (*weight)[ch]++;
+    //     // printf("%d\n",(*weight)[ch]);
+    //     ch=fgetc(fp);
+    // }
 }
 void get_huffcode(Huff_node*Huff_tree,int count,char **map)
 {
