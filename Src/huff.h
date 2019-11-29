@@ -1,4 +1,6 @@
 #pragma once
+
+#include<stdio.h>
 typedef struct Huff_node
 {
     long w;
@@ -6,6 +8,8 @@ typedef struct Huff_node
     int rchild;
     int parent;
 }Huff_node;
+
+
 void format_filepath(char *filepath);
 
 void get_weight_from_file( char *filepath,long **weight,int *count);
@@ -17,8 +21,17 @@ void print_map(char *map[],int count);
 long get_file_size(FILE*fp);
 void print_progress(int n);
 
-void get_encode_file( char*);
-void get_decode_file(char*filepath);
+void get_encode_file( char*,char *,int);
+void get_decode_file(char*filepath,char *output,int);
+
+void get_encode_file_recursion(char*init_filepath,char *huff_dir_file3,int MAX_TIME_ENCODE_TIME);
+void get_decode_file_recursion(char*huff_filepath,char *init_dir_file0);
+
+
+
+
+
+
 
 void my_itoa(unsigned char ch,char num_str[10]);
 unsigned char my_atoi(char num_str[],int len);

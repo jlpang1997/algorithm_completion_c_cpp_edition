@@ -3,4 +3,5 @@ Build/C*
 Build/T*
 Build/c*
 Build/*Make*
-Test/*
+Test/
+Test/!README.md

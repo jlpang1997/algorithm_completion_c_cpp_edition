@@ -5,54 +5,77 @@
 #include"huff.h"
 unsigned min_rw_size=1;
 unsigned char *read_buffer,*write_buffer;
+// int encode_time=0;
+// int decode_time=1;
+// int MAX_TIME_DECODE_TIME;
+// int MAX_TIME_ENCODE_TIME=4;
 int main(int argc,char *argv[])
 {   
-    for(int i=25;i<30;i++)
+    for(int i=10;i<11;i++)
     {
         min_rw_size=1<<i;
         read_buffer=(unsigned char*)malloc(sizeof(unsigned char)*min_rw_size);
         write_buffer=(unsigned char*)malloc(sizeof(unsigned char)*min_rw_size);
-        LARGE_INTEGER li;
-        LONGLONG start, end, freq;
-        char *init_filepath="D:\\Chrome_Download\\a.test.downloading";
-// "D:\Chrome_Download\360safe+251289+n7ddbb65c96.exe"
-        QueryPerformanceFrequency(&li);
-        freq = li.QuadPart;
 
-        QueryPerformanceCounter(&li); 
-        start = li.QuadPart;
-        get_encode_file(init_filepath);
-        QueryPerformanceCounter(&li);
-        end = li.QuadPart;
-        double useTime =(end - start) / (double)freq;
-        int len=strlen("total encode time:");
-        char x[100]="";
-        x[0]='\n';
-        memset(&x[1],' ',20-1-len);
-        sprintf(&x[20-len],"total encode time:%.6f s",useTime);
-        printf("%s",x);
-        FILE*fp_time=fopen("./Test/time.txt","a");
-        fprintf(fp_time,"file_size=%10d\tmin_rw_size=%10dB",get_file_size(fopen(init_filepath,"rb")),min_rw_size);
-        fprintf(fp_time,"\t%.6f",useTime);
+        get_encode_file_recursion("D:\\Chrome_Download\\高一物理必修2知识点全总结.doc","D:\\Chrome_Download\\output.huff",4);
+
+        get_decode_file_recursion("D:\\Chrome_Download\\output.huff","D:\\Chrome_Download\\高一物理必修2知识点全总结.doc");
+        // LARGE_INTEGER li;
+        // LONGLONG start, end, freq;
+        
+
+//         QueryPerformanceFrequency(&li);
+//         freq = li.QuadPart;
+
+//         char output[1000]="D:\\Chrome_Download\\";
+//         QueryPerformanceCounter(&li); 
+//         start = li.QuadPart;
         
         
 
-        char *huff_filepath="D:\\Chrome_Download\\a.test.huff";
-        QueryPerformanceCounter(&li); 
-        start = li.QuadPart;
-        get_decode_file(huff_filepath);
-        QueryPerformanceCounter(&li);
-        end = li.QuadPart;
-        useTime =(end - start) / (double)freq;
-        len=strlen("total decode time:");
-        char y[100]="";
-        y[0]='\n';
-        memset(&y[1],' ',20-1-len);
-        sprintf(&y[20-len],"total decode time:%.6f s",useTime);
-        printf("%s",y);
+
         
-        fprintf(fp_time,"\t%.6f\n",useTime);
-        fclose(fp_time);
+
+
+
+        // QueryPerformanceCounter(&li);
+        // end = li.QuadPart;
+        // double useTime =(end - start) / (double)freq;
+        // int len=strlen("total encode time:");
+        // char x[100]="";
+        // x[0]='\n';
+        // memset(&x[1],' ',20-1-len);
+        // sprintf(&x[20-len],"total encode time:%.6f s",useTime);
+        // printf("%s",x);
+        // FILE*fp_time=fopen("./Test/time.txt","a");
+        // fprintf(fp_time,"file_size=%10d\tmin_rw_size=%10dB",get_file_size(fopen(init_filepath,"rb")),min_rw_size);
+        // fprintf(fp_time,"\t%.6f",useTime);
+        
+        
+
+        // char *huff_filepath="D:\\Chrome_Download\\a.test.huff";
+        // QueryPerformanceCounter(&li); 
+        // start = li.QuadPart;
+
+
+
+        // get_decode_file(huff_filepath,);
+
+
+
+
+        // QueryPerformanceCounter(&li);
+        // end = li.QuadPart;
+        // useTime =(end - start) / (double)freq;
+        // len=strlen("total decode time:");
+        // char y[100]="";
+        // y[0]='\n';
+        // memset(&y[1],' ',20-1-len);
+        // sprintf(&y[20-len],"total decode time:%.6f s",useTime);
+        // printf("%s",y);
+        
+        // fprintf(fp_time,"\t%.6f\n",useTime);
+        // fclose(fp_time);
         free(read_buffer);
         free(write_buffer);
 
@@ -61,7 +84,7 @@ int main(int argc,char *argv[])
     return 0;
 }
 
-void get_encode_file(char *filepath)
+void get_encode_file(char *filepath,char *output,int MAX_TIME_ENCODE_TIME)
 {
     int extra_bytes=0;
     long *weight;
@@ -73,30 +96,18 @@ void get_encode_file(char *filepath)
     int root;
     huff_encode(weight,count,&Huff_tree,&map,&root);
 
-
-    int i=strlen(filepath);
-    // for(;filepath[i]=='.';i++);
-    for(;i>=0&&filepath[i]!='.';i--);
-    char file_type[100]="";
-    strcpy(file_type,&filepath[i]);//获取文件类型
-    int j=i;
-    for(;filepath[j]!='\\'&&filepath[j]!='/';j--);
-    char file_name[100]="";
-    strncpy(file_name,&filepath[j+1],i-j-1);//获取文件名
-
-    char file_huff[100]="D:\\Chrome_Download\\";
-    strcat(file_huff,file_name);
-    strcat(file_huff,".huff");//获取huff压缩文件名和路径
-
     FILE*fp=fopen(filepath,"rb");
-    FILE*fp_huff=fopen(file_huff,"wb");
-    // printf("\n%s create.\n",file_huff);
+    FILE*fp_huff=fopen(output,"wb");
+    printf("\ninput:\t%s\noutput:\t%s\n",filepath,output);
     if(!fp||!fp_huff)
     {
         printf("file open failed.\n");
         exit(0);
     }
     //陆续开始存储解压要用到的数据
+    fwrite(&MAX_TIME_ENCODE_TIME,sizeof(MAX_TIME_ENCODE_TIME),1,fp_huff);
+    extra_bytes+=sizeof(MAX_TIME_ENCODE_TIME);
+
     int init_end=0;
     // fseek(fp_huff,sizeof(int)+sizeof(long),SEEK_SET);//留出给init_end和totalbytes的空间
     fwrite(&init_end,sizeof(int),1,fp_huff);
@@ -108,11 +119,6 @@ void get_encode_file(char *filepath)
 
     fwrite(&root,sizeof(int),1,fp_huff);
     extra_bytes+=sizeof(int);
-
-    int type_len=strlen(file_type)+1;
-    fwrite(&type_len,sizeof(int),1,fp_huff);
-    fwrite(file_type,sizeof(char),type_len,fp_huff);//记录文件类型 把/0也写入
-    extra_bytes+=sizeof(char)*type_len;
 
     fwrite(&count,sizeof(int),1,fp_huff);
     extra_bytes+=sizeof(int);
@@ -195,27 +201,6 @@ void get_encode_file(char *filepath)
         }
 
     }
-    // ch=fgetc(fp);
-    // while(feof(fp)==0)
-    // {
-    //     if(((100*(double)cur_total_bytes)/size)>per)
-    //         print_progress(++per,"encoding:");
-    //     cur_total_bytes++;
-    //     int code_n=strlen(map[ch]);
-    //     for(int i=0;i<code_n;i++)
-    //     {
-    //         byte[bit_n++]=map[ch][i];
-    //         if(bit_n==8)
-    //         {
-    //             unsigned char new_byte=my_atoi(byte,8);
-    //             fputc(new_byte,fp_huff);
-    //             total_bytes++;
-    //             bit_n=0;
-    //         }
-    //     }
-    //     ch=fgetc(fp);
-    // }
-
 
     init_end=bit_n;
     if(bit_n!=0)
@@ -237,11 +222,11 @@ void get_encode_file(char *filepath)
     }
     if(cur_write_count)
         fwrite(write_buffer,1,cur_write_count,fp_huff);
-    if(fseek(fp_huff,0L,0)!=0)
+    if(fseek(fp_huff,sizeof(MAX_TIME_ENCODE_TIME),0)!=0)
         printf("返回失败\n");//定位回到开头
     fwrite(&init_end,sizeof(int),1,fp_huff);
     fwrite(&total_bytes,sizeof(long),1,fp_huff);
-    // printf("\n");
+    printf("\n");
     int len=strlen("reduction ratio:");
     char x[100]="";
     x[0]='\n';
@@ -249,36 +234,31 @@ void get_encode_file(char *filepath)
     total_bytes+=extra_bytes;
     double ratio=(100*(double)(size-total_bytes)/size);
     sprintf(&x[20-len],"reduction ratio:%.2f%%",ratio);
-    printf("%s",x);
+    printf("%s\n\n",x);
     FILE*fp_result=fopen("./Test/result.txt","a");
-    fprintf(fp_result,"one byte\t%s%s\t%.2fKB\t%.2fKB\t%.2f%%\n",file_name,file_type,(double)size/1024,(double)total_bytes/1024,ratio);
+    // fprintf(fp_result,"one byte\t%s%s\t%.2fKB\t%.2fKB\t%.2f%%\n",file_name,file_type,(double)size/1024,(double)total_bytes/1024,ratio);
     fclose(fp_result);
-
     fclose(fp_huff);
     fclose(fp);
 }
-void get_decode_file(char*filepath)
+void get_decode_file(char*filepath,char *output,int MAX_TIME_DECODE_TIME)
 {
-
+    printf("\ninput:\t%s\noutput:\t%s\n",filepath,output);
     FILE*fp_huff=fopen(filepath,"rb");
     if(!fp_huff)
     {
         printf("%s open failed.\n",filepath);
         exit(0);
     }
+    FILE*fp_init=fopen(output,"wb");
+    if(!fp_init)
+    {
+        printf("%s open failed.\n",output);
+        exit(0);
+    }
 
-    int i=strlen(filepath);
-    // for(;filepath[i]=='.';i++);
-    for(;i>=0&&filepath[i]!='.';i--);
-    int j=i;
-    for(;filepath[j]!='\\'&&filepath[j]!='/';j--);
-    char file_name[100]="";
-    strncpy(file_name,&filepath[j+1],i-1-j);
-    char init_file_path_name[100]="./Test/";
-    strcat(init_file_path_name,file_name);
-
-
-    
+    fread(&MAX_TIME_DECODE_TIME,sizeof(MAX_TIME_DECODE_TIME),1,fp_huff);
+    fseek(fp_huff,sizeof(MAX_TIME_DECODE_TIME),0);
 
     int init_end;
     fread(&init_end,sizeof(int),1,fp_huff);
@@ -288,21 +268,6 @@ void get_decode_file(char*filepath)
 
     int root;
     fread(&root,sizeof(int),1,fp_huff);
-
-    int type_len;
-    fread(&type_len,sizeof(int),1,fp_huff);
-    
-    char file_type[100]="";
-    fread(file_type,sizeof(char),type_len,fp_huff);
-    strcat(init_file_path_name,file_type);
-    FILE*fp_init=fopen(init_file_path_name,"wb");
-    if(!fp_init)
-    {
-        printf("%s open failed.\n",init_file_path_name);
-        exit(0);
-    }
-    // printf("%s .\n",init_file_path_name);
-
 
     int count;
     fread(&count,sizeof(int),1,fp_huff);
@@ -394,37 +359,6 @@ void get_decode_file(char*filepath)
     if(cur_write_count)
         fwrite(write_buffer,1,cur_write_count,fp_init);
 
-    // unsigned char ch;
-    // ch=fgetc(fp_huff);
-    // int cur_total=0;
-    // unsigned p=root;
-
-    // int per=-1;
-    // printf("\n");
-    // while(!feof(fp_huff))
-    // {
-    //     if(100*(double)cur_total/total_bytes>per)
-    //         print_progress(++per,"decoding:");
-    //     cur_total++;
-    //     char byte_str[9]="";
-    //     my_itoa(ch,byte_str);
-    //     int flag=(cur_total==total_bytes&&init_end)?init_end:8;
-    //     for(int i=0;i<flag;i++)
-    //     {
-    //         if(byte_str[i]=='0')
-    //             p=Huff_tree[p].lchild;
-    //         else
-    //             p=Huff_tree[p].rchild;
-    //         if(p<=count)
-    //         {
-    //             fprintf(fp_init,"%c",(unsigned char)p-1);
-    //             byte_str[i]='\0';
-    //             // printf("%d:%s ",p-1,byte_str);
-    //             p=root;
-    //         }
-    //     }
-    //     ch=fgetc(fp_huff);
-    // }
     fclose(fp_huff);
     fclose(fp_init);
 }
