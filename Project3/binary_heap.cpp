@@ -3,7 +3,7 @@
 #include<malloc.h>
 #include"fileio.h"
 #include<string.h>
-int bi_heap_search(int heap[], int heap_size,int value)//返回value的数组下标i
+int bi_heap_search(int heap[], int heap_size,int value)//锟斤拷锟斤拷value锟斤拷锟斤拷锟斤拷锟铰憋拷i
 {
 	int i;
 	for (i = 0; i < heap_size&&heap[i] != value; i++);
@@ -12,7 +12,7 @@ int bi_heap_search(int heap[], int heap_size,int value)//返回value的数组下标i
 	else
 		return i;
 }
-int Is_Minheap(int heap[], int heap_size ,int root)//这个root是heap下标
+int Is_Minheap(int heap[], int heap_size ,int root)//锟斤拷锟絩oot锟斤拷heap锟铰憋拷
 {
 	if (2 * root <= heap_size )
 	{
@@ -45,7 +45,7 @@ int bi_heap_decrease_tmp(int heap[], int &heap_size, int i, int key_k)
 		return -1;
 	}
 	heap[i] = key_k;
-	//往上，一直到维持最小堆的性质
+	//锟斤拷锟较ｏ拷一直锟斤拷维锟斤拷锟斤拷小锟窖碉拷锟斤拷锟斤拷
 	for (; i > 0 && heap[(i + 1) / 2 - 1] > heap[i]; i = (i + 1) / 2 - 1)
 	{
 		swap(heap[(i + 1) / 2 - 1], heap[i]);
@@ -75,7 +75,7 @@ int bi_heap_decrease(int heap[], int &heap_size,int key_x, int key_k)
 }
 int bi_heap_insert(int heap[], int &heap_size, int key,int )
 {
-	//直接在heap最后插入一个正无穷，然后decrease到key
+	//直锟斤拷锟斤拷heap锟斤拷锟斤拷锟斤拷一锟斤拷锟斤拷锟斤拷锟筋，然锟斤拷decrease锟斤拷key
 	heap_size++;
 	heap[heap_size - 1] = MYINFINITY;
 	bi_heap_decrease_tmp(heap, heap_size, heap_size - 1, key);
@@ -83,7 +83,7 @@ int bi_heap_insert(int heap[], int &heap_size, int key,int )
 }
 int bi_heap_extract_min(int heap[], int &heap_size,int ,int)
 {
-	/*同heapsort，每次取出root，然后进行一次heapify*/
+	/*同heapsort锟斤拷每锟斤拷取锟斤拷root锟斤拷然锟斤拷锟斤拷锟揭伙拷锟絟eapify*/
 	if (heap_size < 1)
 	{
 		printf("heap underflow\n");
@@ -97,7 +97,7 @@ int bi_heap_extract_min(int heap[], int &heap_size,int ,int)
 }
 int bi_heap_delete(int heap[], int &heap_size, int i,int)
 {
-	//把对应值decrease到负无穷，然后extract-min
+	//锟窖讹拷应值decrease锟斤拷锟斤拷锟斤拷锟筋，然锟斤拷extract-min
 	
 	//if (heap_size < 1)
 	//{

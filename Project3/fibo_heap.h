@@ -17,9 +17,9 @@ typedef struct Fibo_heap
 	int keynum;
 	int maxdegree;
 	Fibo_node *min;
-	Fibo_node **cons;//ÔÝÊ±²»ÖªµÀÓÐºÎÓÃ
+	Fibo_node **cons;//ï¿½ï¿½Ê±ï¿½ï¿½Öªï¿½ï¿½ï¿½Ðºï¿½ï¿½ï¿½
 }Fibo_heap;
-void add_fibo_node(Fibo_node *node, Fibo_node *root);//¼ÓÈëµÄÌõ¼þÊÇ²»Îª¿Õ
+void add_fibo_node(Fibo_node *node, Fibo_node *root);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç²ï¿½Îªï¿½ï¿½
 void print_fibo(Fibo_heap fibo_heap);
 int fibo_heap_build(Fibo_heap &fibo_heap, int*data, int n, Fibo_node*,int);
 int fibo_heap_insert(Fibo_heap &fibo_heap,int *,int, Fibo_node*,int);

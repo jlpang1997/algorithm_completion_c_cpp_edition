@@ -23,16 +23,16 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
-			cout << "ÅÜ¶þ²æ¶ÑÃüÁî £º./heap.exe binary" << endl;
-			cout << "ÅÜì³²¨ÄÇÆõ¶ÑÃüÁî £º./heap.exe fibo" << endl;
+			cout << "ï¿½Ü¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½./heap.exe binary" << endl;
+			cout << "ï¿½ï¿½ì³²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½./heap.exe fibo" << endl;
 		}
 		return 0;
 
 	}
 	else
 	{
-		cout << "ÅÜ¶þ²æ¶ÑÃüÁî £º./heap.exe binary" << endl;
-		cout << "ÅÜì³²¨ÄÇÆõ¶ÑÃüÁî £º./heap.exe fibo" << endl;
+		cout << "ï¿½Ü¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½./heap.exe binary" << endl;
+		cout << "ï¿½ï¿½ì³²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½./heap.exe fibo" << endl;
 		return 0;
 	}
 
@@ -96,10 +96,10 @@ void heap(Heaptype heaptype)
 							i=bi_heap_search(heap, heap_size, data[j]);
 							if (i == -1)
 							{
-								printf("heapÄÚÃ»ÓÐÒªdecrease»òdeleteµÄ%d\n", data[j]);
+								printf("heapï¿½ï¿½Ã»ï¿½ï¿½Òªdecreaseï¿½ï¿½deleteï¿½ï¿½%d\n", data[j]);
 								break;
 							}
-						}//²éÕÒµÄÊ±¼ä²»ËãÔÚÄÚ
+						}//ï¿½ï¿½ï¿½Òµï¿½Ê±ï¿½ä²»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 						QueryPerformanceCounter(&begintime);
 						min = binary_func_wrapper[k](heap, heap_size, i, data[j] - 10);
 						QueryPerformanceCounter(&finishtime);
@@ -114,10 +114,10 @@ void heap(Heaptype heaptype)
 							data[j] -= 10;
 							if (node == NULL)
 							{
-								printf("heapÄÚÃ»ÓÐÒªdecrease»òdeleteµÄ%d\n", data[j]);
+								printf("heapï¿½ï¿½Ã»ï¿½ï¿½Òªdecreaseï¿½ï¿½deleteï¿½ï¿½%d\n", data[j]);
 								break;
 							}
-						}//²éÕÒµÄÊ±¼ä²»ËãÔÚÄÚ
+						}//ï¿½ï¿½ï¿½Òµï¿½Ê±ï¿½ä²»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 						QueryPerformanceCounter(&begintime);
 						min = fibo_func_wrapper[k](fibo_heap, NULL, -1,node, data[j] );
 						QueryPerformanceCounter(&finishtime);

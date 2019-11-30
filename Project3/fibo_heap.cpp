@@ -35,7 +35,7 @@ int fibo_heap_insert(Fibo_heap &fibo_heap, int *, int, Fibo_node*, int x)
 	return -1;
 	
 }
-int fibo_heap_build(Fibo_heap &fibo_heap, int*data, int n, Fibo_node*, int)//°üº¬ÁË³õÊ¼»¯
+int fibo_heap_build(Fibo_heap &fibo_heap, int*data, int n, Fibo_node*, int)//ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½Ê¼ï¿½ï¿½
 {
 	fibo_heap.rootnum = 0;
 	fibo_heap.keynum = 0;
@@ -78,7 +78,7 @@ int fibo_heap_extract_min(Fibo_heap &fibo_heap, int *, int, Fibo_node*, int)
 		
 		for (Fibo_node *x = z->child; i < z->degreee; i++)
 		{
-			//°ÑzµÄÃ¿¸öº¢×Ó²åÈëµ½¸ù±í
+			//ï¿½ï¿½zï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Ó²ï¿½ï¿½ëµ½ï¿½ï¿½ï¿½ï¿½
 			Fibo_node*tmp = x->right;
 			add_fibo_node(x, fibo_heap.min);
 			x->parent = NULL;
@@ -92,7 +92,7 @@ int fibo_heap_extract_min(Fibo_heap &fibo_heap, int *, int, Fibo_node*, int)
 		}
 		else
 		{
-			//´Ó¸ù±íÉ¾³ýµôz£¬È»ºóµ÷ÓÃCONSOLIDATE½øÐÐµ÷Õû
+			//ï¿½Ó¸ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½zï¿½ï¿½È»ï¿½ï¿½ï¿½ï¿½ï¿½CONSOLIDATEï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½
 			z->right->left = z->left;
 			z->left->right = z->right;
 			
@@ -101,13 +101,13 @@ int fibo_heap_extract_min(Fibo_heap &fibo_heap, int *, int, Fibo_node*, int)
 			fibo_heap.keynum--;
 		}
 		
-		return z->key;//»¹Ã»ÊÍ·Å
+		return z->key;//ï¿½ï¿½Ã»ï¿½Í·ï¿½
 	}
 	
 }
 void CONSOLIDATE(Fibo_heap &fibo_heap)
 {
-	//dnÎª¸¨ÖúÊý×éµÄ´óÐ¡
+	//dnÎªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä´ï¿½Ð¡
 	int dn = (int)(log(fibo_heap.keynum)/log(2))+1;
 	//print_fibo(fibo_heap);
 	Fibo_node **A = (Fibo_node**)malloc(sizeof(Fibo_node*)*(dn + 1));
@@ -118,7 +118,7 @@ void CONSOLIDATE(Fibo_heap &fibo_heap)
 	Fibo_node* w = fibo_heap.min->left,*next_w=fibo_heap.min;
 	do
 	{
-		//¶ÔÏÖÓÐ¸ù±í½øÐÐ±éÀú£¬È»ºó°ÑdegreeÏàÍ¬µÄºÏ²¢
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Ð¸ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½È»ï¿½ï¿½ï¿½degreeï¿½ï¿½Í¬ï¿½ÄºÏ²ï¿½
 		w = next_w;
 		next_w = w->right;
 		Fibo_node *x;
@@ -127,26 +127,26 @@ void CONSOLIDATE(Fibo_heap &fibo_heap)
 		
 		while (A[d])
 		{
-			//Ö»ÒªÊÇ¶ÈÎªdµÄ¸ùÒÑ¾­´æÔÚ¶¼»á½øÐÐºÏ²¢
+			//Ö»Òªï¿½Ç¶ï¿½Îªdï¿½Ä¸ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ÐºÏ²ï¿½
 			Fibo_node *y = A[d];
 			if (x->key > y->key)
 			{
-				//±£Ö¤yµÄkey±ÈxµÄÐ¡
+				//ï¿½ï¿½Ö¤yï¿½ï¿½keyï¿½ï¿½xï¿½ï¿½Ð¡
 				Fibo_node*tmp = x;
 				x = y;
 				y = tmp;
 			}
-			fib_heap_link(fibo_heap, y, x);//ºÏ²¢Á½¸ö¶ÈÏàÍ¬µÄ¸ù
+			fib_heap_link(fibo_heap, y, x);//ï¿½Ï²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½Ä¸ï¿½
 			A[d] = NULL;
-			d++;//µ±Ç°xµÄ¶È++
+			d++;//ï¿½ï¿½Ç°xï¿½Ä¶ï¿½++
 		}
 		A[d] = x;
 	} while (w != end);
 	int root_num = 0;
 	int min = -1;
-	for (int i = 0; i < (dn + 1); i++)//ÕÒµ½×îÐ¡µÄ¸ù
+	for (int i = 0; i < (dn + 1); i++)//ï¿½Òµï¿½ï¿½ï¿½Ð¡ï¿½Ä¸ï¿½
 	{
-		//´Ó¸ù±íÖÐµÃµ½×îÐ¡µÄ¸ù¸ømin
+		//ï¿½Ó¸ï¿½ï¿½ï¿½ï¿½ÐµÃµï¿½ï¿½ï¿½Ð¡ï¿½Ä¸ï¿½ï¿½ï¿½min
 		if (A[i])
 		{
 			root_num++;
@@ -190,21 +190,21 @@ void fib_heap_link(Fibo_heap &fibo_heap, Fibo_node*y, Fibo_node*x)
 	y->marked = false;
 }
 int fibo_heap_decrease(Fibo_heap &fibo_heap, int *, int, Fibo_node* x, int k)
-//Ö±½ÓÓÃ½Úµã
+//Ö±ï¿½ï¿½ï¿½Ã½Úµï¿½
 {
 	if (k > x->key)
 	{
-		printf("Ó¦¸ÃÊäÈëÒ»¸ö¼õÐ¡µÄÖµ\n");
+		printf("Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½Öµ\n");
 		return -1;
 	}
 	x->key = k;
 	Fibo_node*y = x->parent;
-	if (y&&x->key < y->key)//ÎªÁË±£³Ö×îÐ¡¶ÑµÄÌØÐÔ£¬ÍùÉÏcut
+	if (y&&x->key < y->key)//Îªï¿½Ë±ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½Ñµï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½cut
 	{
 		CUT(fibo_heap, x, y);
 		CASCADING_CUT(fibo_heap, y);
 	}
-	if (x->key < fibo_heap.min->key)//¸úÐÂmin
+	if (x->key < fibo_heap.min->key)//ï¿½ï¿½ï¿½ï¿½min
 		fibo_heap.min = x;
 
 	return 1;

@@ -6,7 +6,7 @@
 int main()
 {
 	//create_input(10, 10000);
-	inputfileopen();//打开对应组的input文件
+	inputfileopen();//锟津开讹拷应锟斤拷锟絠nput锟侥硷拷
 	outputfileopen();
 	
 	for (int i = 0; i < N; i++)
@@ -23,7 +23,7 @@ int main()
 		LARGE_INTEGER finishtime;
 		QueryPerformanceCounter(&begintime);
 		optimal_bst(p, q, n, e, root);
-		QueryPerformanceCounter(&finishtime);//只测试找到长度的时间
+		QueryPerformanceCounter(&finishtime);//只锟斤拷锟斤拷锟揭碉拷锟斤拷锟饺碉拷时锟斤拷
 		time = finishtime.QuadPart - begintime.QuadPart;
 		output_result(time, root, e[1][n],n);
 		free(p);

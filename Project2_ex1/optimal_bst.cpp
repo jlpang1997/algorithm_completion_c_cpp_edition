@@ -10,7 +10,7 @@ void optimal_bst(double *p, double *q, int n, double **&e, int **&root)
 		e[i] = (double*)malloc(sizeof(double)*(n + 1));
 		w[i] = (double*)malloc(sizeof(double)*(n + 1));
 	}
-	root = (int **)malloc(sizeof(int *)*(n + 1));//用root记录下来每个子树对应的根节点
+	root = (int **)malloc(sizeof(int *)*(n + 1));//锟斤拷root锟斤拷录锟斤拷锟斤拷每锟斤拷锟斤拷锟斤拷锟斤拷应锟侥革拷锟节碉拷
 	for (int i = 1; i <= n; i++)
 		root[i] = (int *)malloc(sizeof(int)*(n + 1));
 	
