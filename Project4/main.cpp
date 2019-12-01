@@ -3,7 +3,7 @@
 
 #include<stdio.h>
 #include<string.h>
-#include<Windows.h>
+#include<sys/time.h>
 #define FUNC_NUM 5
 
 int main(int argc,char **argv)
@@ -31,17 +31,21 @@ int main(int argc,char **argv)
 			int m = 1 << (2 + j);
 			size[j][0] = n; 
 			size[j][1] = m;
-			LARGE_INTEGER begintime;
-			LARGE_INTEGER finishtime;
-			QueryPerformanceCounter(&begintime);
+
+			struct timeval start, end;
+			gettimeofday(&start, NULL);
 			result[j] = func_wrapper[i](input[j][0], n, input[j][1], m);
-			QueryPerformanceCounter(&finishtime);
-			time[j] = finishtime.QuadPart - begintime.QuadPart; 
+			gettimeofday(&end, NULL);
+			time[j] = 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec;
 		}
 		strcpy(output_file, "..\\output\\");
 		strcat(output_file, func_name[i]);
 		strcat(output_file, "\\result.txt");
-
 		get_output(output_file,result,time,size);
 	}
 } 
+
+
+
+
+

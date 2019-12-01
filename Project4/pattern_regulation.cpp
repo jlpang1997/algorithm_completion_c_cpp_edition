@@ -28,12 +28,6 @@ void get_next(unsigned char *P,int m,int **next)//next[j]=k 表示 当前已将�
 	}
 	(*next)[1] = 0;
 	(*next)[0] = 0;
-	//for (int j = 2; j < m+1; j++)
-	//{
-	//	int len = j - 1;
-	//	for (; len > 0 && Naive(&P[j - len], len, &P[0], len) == -1; len--);
-	//	(*next)[j]= len;
-	//}
 	for (int j = 2; j < m + 1; j++)
 	{
 		int result = 0;
@@ -53,8 +47,6 @@ int KMP(unsigned char *T, int n, unsigned char *P, int m)
 {
 	int *next;
 	get_next(P, m, &next);
-	//for (int i = 0; i < m+1; i++)
-	//	printf("next[%d]=%d\n", i, next[i]);
 	int i = 0, j = 0;
 	for (; j < m&&i<n;i++)
 	{
